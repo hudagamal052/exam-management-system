@@ -1,5 +1,9 @@
 <section class="bg-gray-50 dark:bg-gray-900 py-6">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+        <span class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
+            Flowbite
+        </span>
         <div
             class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="px-6 py-4 space-y-2 md:space-y-4 sm:p-8">
@@ -7,7 +11,6 @@
                     Create an account
                 </h1>
                 <form class="space-y-4 md:space-y-6" [formGroup]="registerForm" (ngSubmit)="register()">
-                    <!-- Name Field -->
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                             name</label>
@@ -22,7 +25,6 @@
                         }
                         }
                     </div>
-                    <!-- Email Field -->
                     <div>
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
                             email</label>
@@ -37,7 +39,6 @@
                         }
                         }
                     </div>
-                    <!-- Password Field -->
                     <div>
                         <label for="password"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -52,7 +53,6 @@
                         }
                         }
                     </div>
-                    <!-- Confirm Password Field -->
                     <div>
                         <label for="confirm-password"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
