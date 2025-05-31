@@ -1,23 +1,35 @@
 <section class="bg-gray-50 dark:bg-gray-900">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <span class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <span class="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white">
             <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
-            Flowbite
+            Examo
         </span>
         <div
-            class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            class="w-full bg-white rounded-lg shadow-md md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div class="p-6 space-y-3 md:space-y-5 sm:p-8">
                 <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                     Sign in to your account
                 </h1>
                 <form [formGroup]="loginForm" class="space-y-4 md:space-y-6" (ngSubmit)="login()">
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                        <label for="email" class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Your
                             email</label>
-                        <input type="email" name="email" id="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg
-                            focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="name@company.com" required formControlName="email">
+                        <div class="flex">
+                            <span
+                                class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M2.038 5.61A2.01 2.01 0 0 0 2 6v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6c0-.12-.01-.238-.03-.352l-.866.65-7.89 6.032a2 2 0 0 1-2.429 0L2.884 6.288l-.846-.677Z" />
+                                    <path
+                                        d="M20.677 4.117A1.996 1.996 0 0 0 20 4H4c-.225 0-.44.037-.642.105l.758.607L12 10.742 19.9 4.7l.777-.583Z" />
+                                </svg>
+                            </span>
+                            <input type="email" name="email" id="email"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-e-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="name@company.com" required formControlName="email">
+                        </div>
                         @if (getEmail.touched && getEmail.invalid) {
                         @if (getEmail.hasError('required')) {
                         <div class="text-red-500">Email is required</div>
@@ -29,10 +41,22 @@
                     </div>
                     <div>
                         <label for="password"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                        <input type="password" name="password" id="password" placeholder="Enter Password"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required formControlName="password">
+                            class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Password</label>
+                        <div class="flex">
+                            <span
+                                class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd"
+                                        d="M8 10V7a4 4 0 1 1 8 0v3h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2-3a2 2 0 1 1 4 0v3h-4V7Zm2 6a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            <input type="password" name="password" id="password" placeholder="Enter Password"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-e-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required formControlName="password">
+                        </div>
                         @if (getPassword.touched && getPassword.invalid) {
                         @if (getPassword.hasError('required')) {
                         <div class="text-red-500">Password is required</div>
@@ -47,19 +71,20 @@
                             <div class="flex items-center h-5">
                                 <input id="remember" aria-describedby="remember" type="checkbox"
                                     formControlName="rememberMe"
-                                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800">
+                                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500 dark:ring-offset-gray-800">
                             </div>
                             <div class="ml-3 text-sm">
                                 <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
                             </div>
                         </div>
                     </div>
-                    <button type="submit"
-                        class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                        Sign in</button>
-                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                    <button type="submit" [disabled]="loginForm.invalid"
+                        class="w-full text-white bg-blue-600 hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-md hover:shadow-lg font-semibold rounded-lg text-base px-6 py-3 text-center transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-600 dark:focus:ring-blue-500">
+                        Sign in
+                    </button>
+                    <p class="text-md font-light text-gray-500 dark:text-gray-400">
                         Don't have an account yet? <a [routerLink]="['/register']"
-                            class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                            class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign up</a>
                     </p>
                 </form>
             </div>

@@ -10,11 +10,20 @@ import { IStudent } from '../../models/istudent';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  isSubmitting = false;
+
   studentData: IStudent = {
     id: 0,
     name: '',
     email: '',
     password: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      country: ''
+    },
+    image: '',
     role: 'student',
     firstTime: true
   };
@@ -25,7 +34,13 @@ export class RegisterComponent {
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)])
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    phone: new FormControl('', [Validators.required, Validators.minLength(11)]),
+    address: new FormGroup({
+      street: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required])
+    })
   }, { validators: this.passwordMatchValidator() });
 
   passwordMatchValidator(): ValidatorFn {
@@ -52,19 +67,48 @@ export class RegisterComponent {
     return this.registerForm.get('confirmPassword')!;
   }
 
+  get getPhone() {
+    return this.registerForm.get('phone')!;
+  }
+
+  get getStreet() {
+    return this.registerForm.get('address')?.get('street')!;
+  }
+
+  get getCity() {
+    return this.registerForm.get('address')?.get('city')!;
+  }
+
+  get getCountry() {
+    return this.registerForm.get('address')?.get('country')!;
+  }
+
   register() {
+    this.registerForm.markAllAsTouched();
     if (this.registerForm.valid) {
+      this.isSubmitting = true;
+      const formValue = this.registerForm.value;
       this.studentData = {
         id: 0,
-        name: this.registerForm.value.name ?? '',
-        email: this.registerForm.value.email ?? '',
-        password: this.registerForm.value.password ?? '',
+        name: formValue.name ?? '',
+        email: formValue.email ?? '',
+        password: formValue.password ?? '',
+        phone: formValue.phone ?? '',
+        address: {
+          street: formValue.address?.street ?? '',
+          city: formValue.address?.city ?? '',
+          country: formValue.address?.country ?? ''
+        },
+        image: '',
         role: 'student',
         firstTime: false
       };
-      console.log(this.studentData);
-      alert('Registration successful! Redirecting to login...');
-      this.router.navigate(['/login']);
+      setTimeout(() => {
+        console.log('Student Data:', this.studentData);
+        alert('Registration successful! Redirecting to login...');
+        this.router.navigate(['/login']);
+        this.isSubmitting = false;
+      }, 1000);
     }
   }
 

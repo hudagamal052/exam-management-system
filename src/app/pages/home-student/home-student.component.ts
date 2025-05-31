@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './home-student.component.css'
 })
 export class HomeStudentComponent {
-
+  numberOfExams: number = 10;
+  numberOfPassedExams: number = 7;
+  numberOfFailedExams: number = 3;
 }
