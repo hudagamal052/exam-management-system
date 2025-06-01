@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IProfile } from '../../models/iprofile';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -6,9 +6,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   selector: 'app-profile',
   imports: [ReactiveFormsModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent implements AfterViewInit {
+  @ViewChild('crudModal', { static: false }) crudModal!: ElementRef;
+
   userProfileData: IProfile = {
     id: 1,
     name: 'John Elesha',
@@ -41,6 +43,40 @@ export class ProfileComponent {
       city: new FormControl(this.userProfileData.address.city),
       country: new FormControl(this.userProfileData.address.country),
     });
+  }
+
+  ngAfterViewInit() {
+    // Ensure the modal is initialized after the view is ready
+    if (this.crudModal && this.crudModal.nativeElement) {
+      setTimeout(() => {
+        const modalElement = this.crudModal.nativeElement;
+        if (typeof (window as any).Modal !== 'undefined') {
+          // Initialize with Flowbite's Modal API
+          const modal = new (window as any).Modal(modalElement);
+          // Ensure toggle buttons work with Flowbite
+          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
+          toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              modal.toggle();
+            });
+          });
+        } else {
+          // Fallback: Manually toggle if Flowbite API is unavailable
+          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
+          toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              modalElement.classList.toggle('hidden');
+              const overlay = document.querySelector('.flowbite-modal-overlay');
+              if (overlay) {
+                overlay.classList.toggle('hidden');
+              }
+            });
+          });
+        }
+      }, 0);
+    } else {
+      console.warn('Modal element not found. Check template reference #crudModal.');
+    }
   }
 
   onImageChange(event: Event): void {
