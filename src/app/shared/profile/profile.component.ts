@@ -46,14 +46,11 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Ensure the modal is initialized after the view is ready
     if (this.crudModal && this.crudModal.nativeElement) {
       setTimeout(() => {
         const modalElement = this.crudModal.nativeElement;
         if (typeof (window as any).Modal !== 'undefined') {
-          // Initialize with Flowbite's Modal API
           const modal = new (window as any).Modal(modalElement);
-          // Ensure toggle buttons work with Flowbite
           const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
           toggleButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -61,7 +58,6 @@ export class ProfileComponent implements AfterViewInit {
             });
           });
         } else {
-          // Fallback: Manually toggle if Flowbite API is unavailable
           const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
           toggleButtons.forEach(button => {
             button.addEventListener('click', () => {
@@ -82,17 +78,17 @@ export class ProfileComponent implements AfterViewInit {
   onImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
-      this.selectedFileName = input.files[0].name; // Store file name for display
+      this.selectedFileName = input.files[0].name;
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.selectedImage = e.target?.result as string; // Store image temporarily
+        this.selectedImage = e.target?.result as string;
       };
       reader.readAsDataURL(input.files[0]);
     } else {
       this.selectedFileName = null;
       this.selectedImage = null;
     }
-    input.value = ''; // Reset file input
+    input.value = '';
   }
 
   onSubmit(): void {
