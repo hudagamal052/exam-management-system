@@ -37,9 +37,9 @@ export class RegisterComponent {
     confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
     phone: new FormControl('', [Validators.required, Validators.minLength(11)]),
     address: new FormGroup({
-      street: new FormControl('', [Validators.required]),
+      street: new FormControl(''),
       city: new FormControl('', [Validators.required]),
-      country: new FormControl('', [Validators.required])
+      country: new FormControl('')
     })
   }, { validators: this.passwordMatchValidator() });
 
@@ -71,16 +71,8 @@ export class RegisterComponent {
     return this.registerForm.get('phone')!;
   }
 
-  get getStreet() {
-    return this.registerForm.get('address')?.get('street')!;
-  }
-
   get getCity() {
     return this.registerForm.get('address')?.get('city')!;
-  }
-
-  get getCountry() {
-    return this.registerForm.get('address')?.get('country')!;
   }
 
   register() {

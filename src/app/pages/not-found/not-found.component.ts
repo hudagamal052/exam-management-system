@@ -12,7 +12,7 @@ export class NotFoundComponent {
   constructor(private router: Router, private location: Location) { }
 
   goToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/homeStudent/main']);
   }
 
   goBack() {

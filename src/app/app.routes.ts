@@ -7,6 +7,7 @@ import { HomeStudentComponent } from './pages/home-student/home-student.componen
 import { ExamsStudentComponent } from './pages/exams-student/exams-student.component';
 import { ResultsStudentComponent } from './pages/results-student/results-student.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +39,10 @@ export const routes: Routes = [
             {
                 path: 'main',
                 component: HomeStudentComponent,
+            },
+            {
+                path: 'profile',
+                component: ProfileComponent,
             },
             {
                 path: 'exams',

@@ -72,6 +72,36 @@
                             </div>
 
                             <div>
+                                <label for="phone"
+                                    class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Phone
+                                    number</label>
+                                <div class="flex">
+                                    <span
+                                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd"
+                                                d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4Zm12 12V5H7v11h10Zm-5 1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    <input type="tel" name="phone" id="phone" formControlName="phone"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Enter Your Phone Number" required>
+                                </div>
+                                @if (getPhone.touched && getPhone.invalid) {
+                                @if (getPhone.hasError('required')) {
+                                <div class="text-red-500">Phone number is required</div>
+                                } @else if (getPhone.hasError('minlength')) {
+                                <div class="text-red-500">Phone number must be 11 numbers</div>
+                                }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div>
                                 <label for="password"
                                     class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Password</label>
                                 <div class="flex">
@@ -129,62 +159,6 @@
                                 <div class="text-red-500">Passwords do not match</div>
                                 }
                             </div>
-                        </div>
-
-                        <div class="space-y-6">
-                            <div>
-                                <label for="phone"
-                                    class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Phone
-                                    number</label>
-                                <div class="flex">
-                                    <span
-                                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd"
-                                                d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4Zm12 12V5H7v11h10Zm-5 1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <input type="tel" name="phone" id="phone" formControlName="phone"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Enter Your Phone Number" required>
-                                </div>
-                                @if (getPhone.touched && getPhone.invalid) {
-                                @if (getPhone.hasError('required')) {
-                                <div class="text-red-500">Phone number is required</div>
-                                } @else if (getPhone.hasError('minlength')) {
-                                <div class="text-red-500">Phone number must be 11 numbers</div>
-                                }
-                                }
-                            </div>
-
-                            <div formGroupName="address">
-                                <label for="street"
-                                    class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Street
-                                    address</label>
-                                <div class="flex">
-                                    <span
-                                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd"
-                                                d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <input type="text" name="street" id="street" formControlName="street"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Enter Your Street Address" required>
-                                </div>
-                                @if (getStreet.touched && getStreet.invalid) {
-                                @if (getStreet.hasError('required')) {
-                                <div class="text-red-500">Street address is required</div>
-                                }
-                                }
-                            </div>
 
                             <div formGroupName="address">
                                 <label for="city"
@@ -207,31 +181,6 @@
                                 @if (getCity.touched && getCity.invalid) {
                                 @if (getCity.hasError('required')) {
                                 <div class="text-red-500">City is required</div>
-                                }
-                                }
-                            </div>
-
-                            <div formGroupName="address">
-                                <label for="country"
-                                    class="block mb-2 text-md font-medium text-gray-900 dark:text-white">Country</label>
-                                <div class="flex">
-                                    <span
-                                        class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-gray-300 border-e-0 rounded-s-xl dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        <svg class="w-[28px] h-[28px] text-gray-800 dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd"
-                                                d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <input type="text" name="country" id="country" formControlName="country"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Enter Your Country" required>
-                                </div>
-                                @if (getCountry.touched && getCountry.invalid) {
-                                @if (getCountry.hasError('required')) {
-                                <div class="text-red-500">Country is required</div>
                                 }
                                 }
                             </div>

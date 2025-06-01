@@ -1,50 +1,110 @@
-<div class="p-4 sm:ml-64 h-screen">
+<div class="p-4 sm:ml-64">
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-full text-center">
-        <div class="grid grid-cols-3 gap-4 mb-10 mt-2">
-            <div class="flex flex-col items-center justify-evenly h-30 rounded-full bg-gray-50 dark:bg-gray-800">
-                <h2 class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">Taken Exams</h2>
-                <p class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">
-                    {{ numberOfExams }}
-                </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch min-h-[300px] sm:min-h-[400px] mb-[60px]">
+            <div class="flex flex-col gap-2 sm:gap-4 justify-between">
+                <div
+                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-white shadow-md dark:bg-gray-800 h-1/3 min-h-[100px]">
+                    <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-blue-600 dark:text-blue-400">Taken
+                        Exams</h2>
+                    <p class="text-lg sm:text-xl lg:text-2xl text-blue-600 dark:text-blue-400">{{ numberOfExams }}</p>
+                </div>
+                <div
+                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-white shadow-md dark:bg-gray-800 h-1/3 min-h-[100px]">
+                    <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-green-500 dark:text-green-400">Passed
+                        Exams</h2>
+                    <p class="text-lg sm:text-xl lg:text-2xl text-green-500 dark:text-green-400">{{ numberOfPassedExams
+                        }}</p>
+                </div>
+                <div
+                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-white shadow-md dark:bg-gray-800 h-1/3 min-h-[100px]">
+                    <h2 class="text-lg sm:text-xl lg:text-2xl font-semibold text-red-500 dark:text-red-400">Failed Exams
+                    </h2>
+                    <p class="text-lg sm:text-xl lg:text-2xl text-red-500 dark:text-red-400">{{ numberOfFailedExams }}
+                    </p>
+                </div>
             </div>
-            <div class="flex flex-col items-center justify-evenly h-30 rounded-full bg-gray-50 dark:bg-gray-800">
-                <h2 class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">Passed Exams</h2>
-                <p class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">
-                    {{ numberOfPassedExams }}
-                </p>
-            </div>
-            <div class="flex flex-col items-center justify-evenly h-30 rounded-full bg-gray-50 dark:bg-gray-800">
-                <h2 class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">Failed Exams</h2>
-                <p class="text-lg md:text-xl lg:text-3xl text-secondary-600 dark:text-gray-500">
-                    {{ numberOfFailedExams }}
-                </p>
+            <div class="rounded-lg bg-white shadow-md dark:bg-gray-800 p-4 flex items-center justify-center">
+                <div id="pie-chart" class="w-full max-h-[300px] sm:max-h-[400px] aspect-square visible">
+                    @if (!chartLoaded) {
+                    <p class="text-blue-600 dark:text-blue-400 text-center mt-6">
+                        Chart is loading...
+                    </p>
+                    }
+                </div>
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div class="flex items-center justify-center h-60 rounded-sm bg-gray-50 dark:bg-gray-800">
-                <div class="px-6">
-                    <h2 class="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-600 text-center dark:text-gray-300 mb-5">
-                        Exam Instructions</h2>
-                    <ul class="list-disc text-gray-500 dark:text-gray-400 text-xl space-y-1 sm:text-sm md:text-md lg:text-xl">
-                        <li>Read all questions carefully.</li>
-                        <li>Manage your time efficiently.</li>
-                        <li>Do not reload the page.</li>
-                        <li>Submit answers before time ends.</li>
-                    </ul>
-                </div>
-            </div>
 
-            <div class="flex items-center justify-center h-60 rounded-sm bg-gray-50 dark:bg-gray-800">
-                <div class="px-6">
-                    <h2 class="text-3xl font-semibold text-gray-600 text-center dark:text-gray-300 mb-5">Exam
-                        Instructions</h2>
-                    <ul class="list-disc text-gray-500 dark:text-gray-400 text-xl space-y-1">
-                        <li>Read all questions carefully.</li>
-                        <li>Manage your time efficiently.</li>
-                        <li>Do not reload the page.</li>
-                        <li>Submit answers before time ends.</li>
-                    </ul>
-                </div>
+        <div class="min-h-[240px] py-6 rounded-lg bg-white shadow-md dark:bg-gray-800 flex items-center justify-center">
+            <div class="max-w-2xl">
+                <h2
+                    class="text-3xl font-bold text-blue-600 dark:text-blue-400 text-center mb-6 border-b-2 border-blue-600 dark:border-blue-400 pb-2">
+                    Exam Instructions
+                </h2>
+                <ul class="text-gray-600 dark:text-gray-300 text-lg space-y-2 text-left">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Read carefully:</span> Review all questions thoroughly before
+                            answering.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Manage time:</span> Allocate time wisely to complete all
+                            questions.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Stable connection:</span> Ensure a reliable internet
+                            connection and charged device.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">No reloading:</span> Do not refresh or reload the page during
+                            the exam.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Use navigation:</span> Use provided buttons; avoid browser
+                            back/forward.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Submit on time:</span> Submit answers before the timer
+                            expires.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-1 flex-shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                        </svg>
+                        <span><span class="font-semibold">Academic integrity:</span> Avoid unauthorized materials or
+                            assistance.</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
