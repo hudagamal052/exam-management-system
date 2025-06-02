@@ -8,6 +8,8 @@ import { ExamsStudentComponent } from './pages/exams-student/exams-student.compo
 import { ResultsStudentComponent } from './pages/results-student/results-student.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProfileComponent } from './shared/profile/profile.component';
+import { ExamQuestionsComponent } from './pages/exam-questions/exam-questions.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 
 export const routes: Routes = [
     {
@@ -45,12 +47,20 @@ export const routes: Routes = [
                 component: ProfileComponent,
             },
             {
+                path: 'notifications',
+                component: NotificationsComponent,
+            },
+            {
                 path: 'exams',
                 component: ExamsStudentComponent,
             },
             {
                 path: 'results',
                 component: ResultsStudentComponent,
+            },
+            {
+                path: 'exam-questions/:id',
+                component: ExamQuestionsComponent,
             },
         ],
     },

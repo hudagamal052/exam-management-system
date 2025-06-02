@@ -1,0 +1,22 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { ISubjectGrades } from '../../models/isubject-grades';
+
+@Component({
+  selector: 'app-subject-grades-card',
+  imports: [CommonModule],
+  templateUrl: './subject-grades-card.component.html',
+  styleUrl: './subject-grades-card.component.css'
+})
+export class SubjectGradesCardComponent {
+  @Input() subject: ISubjectGrades | null = null;
+
+  getGradeStyle(grade: number | undefined, max: number): string {
+    if (grade == undefined) return '';
+    const scaledGrade = Math.min(grade, max);
+    const percentage = (scaledGrade / max) * 100;
+    if (percentage >= 75) return 'text-green-600 dark:text-green-400';
+    if (percentage >= 50) return 'text-blue-600 dark:text-blue-400';
+    return 'text-red-700 dark:text-red-500';
+  }
+}
