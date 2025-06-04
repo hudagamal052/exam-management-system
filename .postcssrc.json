@@ -1,0 +1,29 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "purple": {
+          "600": "#6B46C1"
+        },
+        "teal": {
+          "500": "#38B2AC"
+        },
+        "yellow": {
+          "500": "#F6E05E"
+        },
+        "orange": {
+          "500": "#F6AD55"
+        },
+        "blue": {
+          "500": "#3B82F6"
+        },
+        "red": {
+          "900": "#EF4444"
+        }
+      }
+    }
+  },
+  "plugins": {
+    "@tailwindcss/postcss": {}
+  }
+}
