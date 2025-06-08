@@ -5,6 +5,7 @@ import { IStudent } from '../../models/istudent';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'

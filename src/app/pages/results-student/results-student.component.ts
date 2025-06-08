@@ -5,6 +5,7 @@ import { SubjectGradesCardComponent } from '../../shared/subject-grades-card/sub
 
 @Component({
   selector: 'app-results-student',
+  standalone: true,
   imports: [CommonModule, SubjectGradesCardComponent],
   templateUrl: './results-student.component.html',
   styleUrl: './results-student.component.css'

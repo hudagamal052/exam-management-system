@@ -4,6 +4,7 @@ import { ISubjectGrades } from '../../models/isubject-grades';
 
 @Component({
   selector: 'app-subject-grades-card',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './subject-grades-card.component.html',
   styleUrl: './subject-grades-card.component.css'

@@ -20,14 +20,17 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent,
+        title: 'Login',
     },
     {
         path: 'register',
         component: RegisterComponent,
+        title: 'Register',
     },
     {
         path: 'resetPassword',
         component: ResetPasswordComponent,
+        title: 'Reset Password',
     },
     {
         path: 'homeStudent',
@@ -41,31 +44,38 @@ export const routes: Routes = [
             {
                 path: 'main',
                 component: HomeStudentComponent,
+                title: 'Home',
             },
             {
                 path: 'profile',
                 component: ProfileComponent,
+                title: 'Profile',
             },
             {
                 path: 'notifications',
                 component: NotificationsComponent,
+                title: 'Notifications',
             },
             {
                 path: 'exams',
                 component: ExamsStudentComponent,
+                title: 'Exams',
             },
             {
                 path: 'results',
                 component: ResultsStudentComponent,
+                title: 'Results',
             },
             {
                 path: 'exam-questions/:id',
                 component: ExamQuestionsComponent,
+                title: 'Exam Questions',
             },
         ],
     },
     {
         path: '**',
         component: NotFoundComponent,
+        title: 'Not Found Page',
     },
 ];

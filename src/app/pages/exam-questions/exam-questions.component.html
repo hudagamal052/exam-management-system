@@ -1,6 +1,5 @@
 <div class="p-4 sm:ml-64 min-h-screen bg-gray-100 dark:bg-gray-900">
     <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-10 transition-all duration-300">
-        <!-- Timer -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Exam Questions</h1>
             <div class="text-lg font-semibold text-gray-800 dark:text-gray-200">
@@ -8,14 +7,12 @@
             </div>
         </div>
 
-        <!-- Current Question -->
         @if (questions[currentQuestionIndex]) {
         <div class="mb-6 min-h-[200px]">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 Question {{ currentQuestionIndex + 1 }}: {{ questions[currentQuestionIndex].text }}
             </h2>
 
-            <!-- Multiple Choice -->
             @if (questions[currentQuestionIndex].type === 'multiple-choice') {
             <div class="space-y-2">
                 @for (option of questions[currentQuestionIndex].options; track option) {
@@ -30,7 +27,6 @@
             </div>
             }
 
-            <!-- True/False -->
             @if (questions[currentQuestionIndex].type === 'true-false') {
             <div class="space-y-2">
                 <div class="flex items-center">
@@ -50,7 +46,6 @@
         </div>
         }
 
-        <!-- Navigation Buttons -->
         <div class="flex justify-between mb-4">
             <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0"
                 class="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
@@ -64,7 +59,6 @@
             </button>
         </div>
 
-        <!-- Submit Button -->
         <div class="flex justify-center">
             <button (click)="confirmSubmit()"
                 class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
@@ -72,7 +66,6 @@
             </button>
         </div>
 
-        <!-- Confirmation Modal -->
         @if (showConfirmModal) {
         <div id="static-modal"
             class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex bg-gray-400/25">

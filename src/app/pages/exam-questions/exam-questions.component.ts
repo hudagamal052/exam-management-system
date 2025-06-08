@@ -7,17 +7,18 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-exam-questions',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './exam-questions.component.html',
   styleUrl: './exam-questions.component.css'
 })
 export class ExamQuestionsComponent implements OnInit, OnDestroy {
   examId: number | null = null;
-  duration: number = 60; // Default duration in minutes
-  timeRemaining: number = 0; // Time in seconds
+  duration: number = 20;
+  timeRemaining: number = 0;
   timerSubscription: Subscription | null = null;
-  showConfirmModal: boolean = false; // Controls modal visibility
-  isTimerEnded: boolean = false; // Tracks if timer triggered the submission
+  showConfirmModal: boolean = false;
+  isTimerEnded: boolean = false;
 
   questions: IQuestion[] = [
     {
@@ -48,27 +49,24 @@ export class ExamQuestionsComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    // Get exam ID and duration from route
     this.examId = +this.route.snapshot.paramMap.get('id')!;
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state?.['duration']) {
       this.duration = navigation.extras.state['duration'];
     }
 
-    // Initialize answers
     this.answers = this.questions.map(q => ({
       questionId: q.id,
       selectedAnswer: null
     }));
 
-    // Start timer (convert duration to seconds)
     this.timeRemaining = this.duration * 60;
     this.timerSubscription = interval(1000).subscribe(() => {
       if (this.timeRemaining > 0) {
         this.timeRemaining--;
       } else {
         this.isTimerEnded = true;
-        this.showConfirmModal = true; // Show modal when timer ends
+        this.submitExam();
         if (this.timerSubscription) {
           this.timerSubscription.unsubscribe();
         }
@@ -113,40 +111,21 @@ export class ExamQuestionsComponent implements OnInit, OnDestroy {
   }
 
   confirmSubmit() {
-    this.showConfirmModal = true; // Show the confirmation modal
+    this.showConfirmModal = true;
   }
 
   onConfirmSubmit() {
-    this.showConfirmModal = false; // Hide the modal
-    this.submitExam(); // Proceed with submission
+    this.showConfirmModal = false;
+    this.submitExam();
   }
 
   onCancelSubmit() {
-    this.showConfirmModal = false; // Hide the modal
-    if (this.isTimerEnded) {
-      // If timer ended, restart the timer with 1 second to allow user to continue
-      this.isTimerEnded = false;
-      this.timeRemaining = 1;
-      this.timerSubscription = interval(1000).subscribe(() => {
-        if (this.timeRemaining > 0) {
-          this.timeRemaining--;
-        } else {
-          this.isTimerEnded = true;
-          this.showConfirmModal = true;
-          if (this.timerSubscription) {
-            this.timerSubscription.unsubscribe();
-          }
-        }
-      });
-    }
-    // Otherwise, do nothing (user can continue the exam)
+    this.showConfirmModal = false;
   }
 
   submitExam() {
-    // Log answers to console (simulating backend submission)
     console.log('Exam Answers:', this.answers);
 
-    // Stop timer
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
