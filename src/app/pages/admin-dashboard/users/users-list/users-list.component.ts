@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../../../../services/users.service';
+import { UserState } from '../../../../models/user-state';
 
 @Component({
   selector: 'app-users-list',
@@ -6,6 +8,16 @@ import { Component } from '@angular/core';
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 })
-export class UsersListComponent {
-  items= Array.from({ length: 10 }, (_, i) => i + 1);
+export class UsersListComponent implements OnInit {
+  studentState: UserState[] = [];
+
+  constructor(private userService: UsersService){}
+
+  ngOnInit(): void {
+      this.userService.getAllStudentsState().subscribe((value)=>{
+        this.studentState = value;
+        console.log(this.studentState);
+        
+      })
+  }
 }

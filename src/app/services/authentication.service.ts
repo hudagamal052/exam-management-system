@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthResponse } from '../models/auth-response';
@@ -10,11 +10,15 @@ import { AuthResponse } from '../models/auth-response';
 export class AuthenticationService {
   private readonly token_key = 'auth_token';
   private readonly API_URL = 'http://localhost:8080/api/auth';
-
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http:HttpClient, private router: Router) 
+  {}
 
   login(credentials: {email: string, password: string}) {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials).pipe(
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    }).pipe(
       tap(response => {
         this.setToken(response.token);
         localStorage.setItem('email', response.email);
@@ -37,6 +41,8 @@ export class AuthenticationService {
 
   logout(): void {
     localStorage.removeItem(this.token_key);
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
     this.router.navigate(['/login']);
   }
 }
