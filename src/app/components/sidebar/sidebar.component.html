@@ -1,0 +1,105 @@
+<div class="flex flex-col h-full bg-purple-100 fixed">
+  <!-- Logo -->
+  <div class="p-4 flex items-center">
+    <img src="logo.png" alt="Tabor Study Logo" class="h-12 w-12 mr-2" />
+    <span class="text-3xl font-bold text-purple-800">Examy</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="px-4 py-2 w-[19vw]">
+    <input type="text" placeholder="Search" class="w-full p-2 rounded-full border" />
+  </div>
+
+  <!-- Menu -->
+  <nav class="flex-1 px-4 py-2">
+    <div class="text-gray-500 uppercase text-xs font-semibold mb-2">Main</div>
+    <ul>
+      <li>
+        <a routerLink="dashboard" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z">
+            </path>
+          </svg>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a routerLink="exams" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd"
+              d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z"
+              clip-rule="evenodd" />
+          </svg>
+          Exams
+        </a>
+      </li>
+      <li>
+        <a routerLink="questions" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Questions
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="users" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z">
+            </path>
+          </svg>
+          Users
+        </a>
+      </li>
+      <li>
+        <a routerLink="results" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd"
+              d="M9 2a1 1 0 0 0-1 1H6a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2a1 1 0 0 0-1-1H9Zm1 2h4v2h1a1 1 0 1 1 0 2H9a1 1 0 0 1 0-2h1V4Zm5.707 8.707a1 1 0 0 0-1.414-1.414L11 14.586l-1.293-1.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4Z"
+              clip-rule="evenodd" />
+          </svg>
+          Results
+        </a>
+      </li>
+      <li>
+        <a routerLink="profile" routerLinkActive="bg-purple-200 text-purple-800 font-medium"
+          class="flex items-center p-3 text-gray-600 rounded-lg hover:bg-purple-200 hover:text-purple-700 transition-colors group block">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd">
+            </path>
+          </svg>
+          Profile
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- System -->
+  <div class="px-4 py-2 w-full">
+    <div class="text-gray-500 uppercase text-xs font-semibold mb-2">System</div>
+    <ul>
+      <li class="p-2 flex items-center text-gray-600"><i class="fas fa-cog mr-2"></i> Settings</li>
+      <li class="p-2 flex items-center text-gray-600"><i class="fas fa-question mr-2"></i> Help</li>
+    </ul>
+  </div>
+
+  <!-- User Profile -->
+  <div class="p-4 border-t flex items-center w-full">
+    <img src="logo.png" alt="User" class="h-10 w-10 rounded-full mr-2" />
+    <div>
+      <p class="font-medium">Huda</p>
+      <p class="text-sm text-gray-500">hudagmail.com</p>
+    </div>
+  </div>
+</div>

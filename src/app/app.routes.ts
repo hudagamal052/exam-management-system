@@ -1,5 +1,11 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { DashboardComponent } from './pages/admin-dashboard/dashboard/dashboard.component';
+import { ExamsComponent } from './pages/admin-dashboard/exams/exams.component';
+import { QuestionsComponent } from './pages/admin-dashboard/questions/questions.component';
+import { UsersComponent } from './pages/admin-dashboard/users/users.component';
+import { AddUserComponent } from './pages/admin-dashboard/users/add-user/add-user.component';
+import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { HomeLayoutComponent } from './pages/home-layout/home-layout.component';
@@ -10,14 +16,31 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProfileComponent } from './shared/profile/profile.component';
 import { ExamQuestionsComponent } from './pages/exam-questions/exam-questions.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { authGuard } from './auth.guard';
+import { ResultsComponent } from './pages/admin-dashboard/results/results.component';
 
 export const routes: Routes = [
-    {
+      {
         path: '',
         redirectTo: 'login',
         pathMatch: 'full',
     },
-    {
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'exams', component: ExamsComponent },
+      { path: 'questions', component: QuestionsComponent },
+      { path: "users", component: UsersComponent},
+      { path: "results", component:ResultsComponent },
+      { path: "users/add", component: AddUserComponent}
+    ],
+  },
+  
+      {
         path: 'login',
         component: LoginComponent,
         title: 'Login',
@@ -73,9 +96,10 @@ export const routes: Routes = [
             },
         ],
     },
-    {
-        path: '**',
+  
+  {
+    path: "**",
         component: NotFoundComponent,
         title: 'Not Found Page',
-    },
+  }
 ];

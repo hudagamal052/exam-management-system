@@ -1,0 +1,17 @@
+<div class="flex bg-purple-100 h-screen overflow-hidden w-[100%]">
+  <!-- Sidebar -->
+  <app-sidebar class="w-[20%]"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="bg-purple-100 flex items-center w-[80%]">
+    <div class="flex-1 flex flex-col rounded-lg overflow-hidden my-1 mr-2 bg-white h-[98vh]">
+      <!-- Header -->
+      <app-header></app-header>
+
+      <!-- Dashboard Content -->
+      <main class="flex-1 overflow-x-hidden overflow-y-auto bg-purple-50 p-2">
+        <router-outlet></router-outlet>
+      </main> <!-- <app-dashboard class=" p-4 overflow-y-auto scrollbar-hide"></app-dashboard> -->
+    </div>
+  </div>
+</div>

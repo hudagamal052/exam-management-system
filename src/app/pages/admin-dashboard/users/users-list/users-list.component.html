@@ -1,0 +1,86 @@
+
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-12">
+    @if (studentState.length === 0) {
+        <div class="alert alert-info p-4 m-3 mt-5">
+            <h1 class="text-[32px] text-purple-600">No Student to present</h1>
+            <p class="text-opacity-25">System does not include any students yet</p>
+        </div>
+    }
+    @else {
+        <table class="w-full text-sm text-left rtl:text-right bg-purple-50 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-purple-200 dark:text-purple-800">
+                <tr>
+                    <th scope="col" class="p-4">
+                        <div class="flex items-center">
+                           
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Username
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        email
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        phone
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Attended Exams
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Active Exams
+                    </th>
+                    <!-- <th scope="col" class="px-6 py-3">
+                        Total Score
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        level&semster
+                    </th> -->
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for( item of studentState; track item.email ){
+                    <tr class="bg-white border-b bg-purple-200 text-purple-800 hover:bg-purple-100 dark:hover:bg-purple-100">
+                        <td class="w-4 p-4">
+                            <div class="flex items-center">
+                                <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                            </div>
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap text-purple-800">
+                            {{item.name}}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{item.email}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{item.phone}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{item.attendedExmas}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{item.activeExmas}}
+                        </td>
+                        <!-- <td class="px-6 py-4">
+                            {{item.totalScore}}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{item.levelAndSemster}}
+                        </td> -->
+                        <td class="flex items-center px-6 py-4">
+                            <a href="#" (click)="goToEditPage(item.email)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <a href="#" (click)="deleteUser(item.email)" class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
+                        </td>
+                    </tr>
+                }
+    
+            </tbody>
+        </table>
+    }
+
+</div>
