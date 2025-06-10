@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 declare var ApexCharts: any;
 
 @Component({
@@ -14,6 +14,8 @@ export class HomeStudentComponent implements OnInit, OnChanges {
   numberOfFailedExams: number = 6;
   chartLoaded: boolean = false;
   private chart: any = null;
+
+  @ViewChild('pieChart', { static: true }) pieChart!: ElementRef;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -35,7 +37,7 @@ export class HomeStudentComponent implements OnInit, OnChanges {
   }
 
   private initChart(retryCount: number = 5, retryDelay: number = 200): void {
-    const element = document.getElementById('pie-chart');
+    const element = this.pieChart.nativeElement;
     if (!element || typeof ApexCharts === 'undefined') {
       if (retryCount > 0) {
         console.warn(`Chart element or ApexCharts not ready, retrying (${retryCount} attempts left)...`);
