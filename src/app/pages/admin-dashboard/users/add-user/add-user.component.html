@@ -1,1 +1,80 @@
-<p>add-user works!</p>
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div class="flex flex-col md:flex-row justify-center gap-8 bg-white rounded-lg shadow-md p-6 w-full">
+      <img src="https://i0.wp.com/e-quester.com/wp-content/uploads/2021/11/placeholder-image-person-jpg.jpg" 
+           alt="Profile" 
+           class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-blue-100">
+  
+      <!-- Form Section -->
+      <div class="w-full">
+        <form class="max-w-md mx-auto w-full">
+          <div class="mb-4">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">email</label>
+            <input type="email" id="email" 
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                   placeholder="username" required>
+          </div>
+          <div class="mb-4">
+            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900">phone</label>
+            <input type="number" id="phone" 
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                   required>
+          </div>
+  
+
+          <div class="mb-4">
+            <label for="subjects" class="block mb-2 text-sm font-medium text-gray-900">Select Subject</label>
+            <select id="subjects" 
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+              <option selected disabled>Choose a subject</option>
+              <option value="math">Mathematics</option>
+              <option value="science">Science</option>
+              <option value="history">History</option>
+              <option value="english">English</option>
+              <option value="art">Art</option>
+            </select>
+            <button type="button" 
+                    class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center">
+              Add Subject
+            </button>
+          </div>
+  
+          <!-- Submit Button -->
+          <button type="submit" 
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full">
+            save user
+          </button>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Selected Subjects Table (positioned below the form) -->
+    <div class="mt-8 w-full mx-auto">
+      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3">Subject</th>
+              <th scope="col" class="px-6 py-3">Code</th>
+              <th scope="col" class="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Mathematics</td>
+              <td class="px-6 py-4">MATH101</td>
+              <td class="px-6 py-4">
+                <button class="font-medium text-red-600 hover:underline">Remove</button>
+              </td>
+            </tr>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Science</td>
+              <td class="px-6 py-4">SCI201</td>
+              <td class="px-6 py-4">
+                <button class="font-medium text-red-600 hover:underline">Remove</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

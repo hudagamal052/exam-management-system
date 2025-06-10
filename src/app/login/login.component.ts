@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
@@ -12,10 +12,16 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   loginForm = {email:'' , password: ''};
 
   constructor(private authService: AuthenticationService,private router: Router){  }
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/admin/dashboard']);
+    }
+  }
 
   loginUser(){
     console.log('login clicked');
