@@ -14,6 +14,4 @@ export class UsersService {
   getAllStudentsState(){
     return this.http.get<UserState[]>(`${this.API_Url}/users`)
   }
-
-
 }

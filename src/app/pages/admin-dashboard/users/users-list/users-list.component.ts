@@ -20,4 +20,13 @@ export class UsersListComponent implements OnInit {
         
       })
   }
+
+  goToEditPage(email:string){
+    console.log("email" + email);
+    
+  }
+  deleteUser(email:string){
+    this.userService.getAllStudentsState
+    
+  }
 }

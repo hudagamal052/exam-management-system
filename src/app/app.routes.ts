@@ -7,6 +7,7 @@ import { UsersComponent } from './pages/admin-dashboard/users/users.component';
 import { AddUserComponent } from './pages/admin-dashboard/users/add-user/add-user.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './auth.guard';
+import { ResultsComponent } from './pages/admin-dashboard/results/results.component';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,7 @@ export const routes: Routes = [
       { path: 'exams', component: ExamsComponent },
       { path: 'questions', component: QuestionsComponent },
       { path: "users", component: UsersComponent},
+      { path: "results", component:ResultsComponent },
       { path: "users/add", component: AddUserComponent}
     ],
   },
