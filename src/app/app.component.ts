@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { OnInit } from '@angular/core';
+import { initFlowbite } from 'flowbite';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +11,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'exam-management-system';
+  
+  ngOnInit(): void {
+    initFlowbite();
+  }
 }
