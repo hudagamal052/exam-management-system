@@ -12,7 +12,7 @@ export class ResultsComponent {
   students: UserState[] = [
     {
       image:"",
-      name:"moataz",
+      username:"moataz",
       email:"moataz.noaman12@gmail.com",
       phone:"01098518194",
       attendedExmas:15,
@@ -22,7 +22,7 @@ export class ResultsComponent {
     },
     {
       image:"",
-      name:"moataz",
+      username:"moataz",
       email:"moataz.noaman12@gmail.com",
       phone:"01098518194",
       attendedExmas:15,
@@ -33,7 +33,7 @@ export class ResultsComponent {
 
     {
       image:"",
-      name:"moataz",
+      username:"moataz",
       email:"moataz.noaman12@gmail.com",
       phone:"01098518194",
       attendedExmas:15,
@@ -43,7 +43,7 @@ export class ResultsComponent {
     },
     {
       image:"",
-      name:"moataz",
+      username:"moataz",
       email:"moataz.noaman12@gmail.com",
       phone:"01098518194",
       attendedExmas:15,
@@ -53,7 +53,7 @@ export class ResultsComponent {
     },
     {
       image:"",
-      name:"moataz",
+      username:"moataz",
       email:"moataz.noaman12@gmail.com",
       phone:"01098518194",
       attendedExmas:15,

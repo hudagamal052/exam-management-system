@@ -5,12 +5,12 @@
 
                 <div class="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                   <img [src]="student.image || 'https://via.placeholder.com/300'" 
-                       [alt]="student.name"
+                       [alt]="student.username"
                        class="h-full w-full object-cover">
                 </div>
                 
                 <div class="p-6">
-                  <h2 class="text-xl font-bold text-gray-800 mb-1">{{ student.name }}</h2>                
+                  <h2 class="text-xl font-bold text-gray-800 mb-1">{{ student.username }}</h2>                
                   <div class="flex items-center justify-between bg-blue-50 rounded-lg p-3">
                     <span class="text-gray-700 font-medium">Total Score</span>
                     <span class="bg-blue-500 text-white font-bold py-1 px-3 rounded-full">

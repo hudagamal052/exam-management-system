@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators, AbstractControl } from '@angular/forms'; import { CommonModule } from '@angular/common';
 import { IStudent } from '../../models/istudent';
+import { RegisterRequest } from '../../models/auth-response';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-register',
@@ -25,11 +27,14 @@ export class RegisterComponent {
       country: ''
     },
     image: '',
-    role: 'student',
+    role: 'Student',
     firstTime: true
   };
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private authService: AuthenticationService
+  ) { }
 
   registerForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -81,8 +86,8 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.isSubmitting = true;
       const formValue = this.registerForm.value;
-      this.studentData = {
-        id: 0,
+      
+      const registerData: RegisterRequest = {
         name: formValue.name ?? '',
         email: formValue.email ?? '',
         password: formValue.password ?? '',
@@ -92,16 +97,24 @@ export class RegisterComponent {
           city: formValue.address?.city ?? '',
           country: formValue.address?.country ?? ''
         },
-        image: '',
-        role: 'student',
-        firstTime: false
+        role: 'Student',
+        firstTime: true
       };
-      setTimeout(() => {
-        console.log('Student Data:', this.studentData);
-        alert('Registration successful! Redirecting to login...');
-        this.router.navigate(['/login']);
-        this.isSubmitting = false;
-      }, 1000);
+
+      // Call the authentication service to register the user
+      this.authService.register(registerData).subscribe({
+        next: (response) => {
+          console.log('Registration successful:', response);
+          alert('Registration successful! Redirecting to login...');
+          this.router.navigate(['/login']);
+          this.isSubmitting = false;
+        },
+        error: (error) => {
+          console.error('Registration failed:', error);
+          alert('Registration failed: ' + error.message);
+          this.isSubmitting = false;
+        }
+      });
     }
   }
 
