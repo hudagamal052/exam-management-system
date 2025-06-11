@@ -4,7 +4,6 @@ import { tap, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, RegisterRequest } from '../models/auth-response';
-import { IStudent } from '../models/istudent';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +15,6 @@ export class AuthenticationService {
   
   constructor(private http: HttpClient, private router: Router) {}
 
-  /**
-   * Register a new user/student
-   * @param userData - Student registration data
-   * @returns Observable with registration response
-   */
   register(userData: RegisterRequest): Observable<any> {
     return this.http.post(`${this.API_URL}/register`, userData, {
       headers: new HttpHeaders({
@@ -34,12 +28,7 @@ export class AuthenticationService {
     );
   }
 
-  /**
-   * Login user with email and password
-   * @param credentials - Login credentials
-   * @returns Observable with authentication response
-   */
-  login(credentials: {email: string, password: string}): Observable<AuthResponse> {
+  login(credentials: { email: string, password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -58,25 +47,32 @@ export class AuthenticationService {
     );
   }
 
-  /**
-   * Handle HTTP errors
-   * @param error - HTTP error response
-   * @returns Observable with error
-   */
+  resetPassword(resetData: { password: string; token: string }): Observable<any> {
+    console.log('Resetting password with data:', resetData); // Debug log
+    return this.http.patch<string>(`${this.API_URL}/reset-password`, resetData, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(
+      tap(response => {
+        console.log('Password reset successful:', response);
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Server-side error
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       if (error.error && error.error.message) {
         errorMessage = error.error.message;
       }
     }
-    
+
     console.error('Authentication error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }
@@ -101,23 +97,14 @@ export class AuthenticationService {
     this.router.navigate(['/login']);
   }
 
-  /**
-   * Get current user email from localStorage
-   */
   getCurrentUserEmail(): string | null {
     return localStorage.getItem('email');
   }
 
-  /**
-   * Get current user role from localStorage
-   */
   getCurrentUserRole(): string | null {
     return localStorage.getItem('role');
   }
 
-  /**
-   * Check if current user is first time user
-   */
   isFirstTimeUser(): boolean {
     const isFirstTime = localStorage.getItem('isFirstTime');
     return isFirstTime === 'true';

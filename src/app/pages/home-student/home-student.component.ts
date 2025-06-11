@@ -50,7 +50,7 @@ export class HomeStudentComponent implements OnInit, OnChanges {
 
     const options = {
       series: [this.numberOfPassedExams, this.numberOfFailedExams],
-      colors: ['#22c55e', '#ef4444'],
+      colors: ['#38B2AC', '#EF4444'],
       chart: {
         height: '100%',
         width: '100%',

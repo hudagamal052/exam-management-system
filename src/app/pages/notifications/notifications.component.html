@@ -1,6 +1,6 @@
 <div class="p-4 sm:ml-64 min-h-screen bg-gray-100 dark:bg-gray-900">
     <div class="max-w-3xl mx-auto p-6">
-        <h1 class="text-3xl text-center font-bold text-primary-700 dark:text-gray-200 mb-9">Notifications</h1>
+        <h1 class="text-3xl text-center font-bold text-purple-700 dark:text-gray-200 mb-9">Notifications</h1>
         @if (notifications.length === 0) {
         <p class="text-center text-gray-600 dark:text-gray-300">No notifications available.</p>
         } @else {
@@ -9,7 +9,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border-l-6 transition-all duration-300 hover:shadow-lg"
                 [ngClass]="{
                     'border-red-500': getExamStatus(notification.dateTime, notification.endDateTime) === 'past',
-                    'border-green-500': getExamStatus(notification.dateTime, notification.endDateTime) === 'present',
+                    'border-teal-500': getExamStatus(notification.dateTime, notification.endDateTime) === 'present',
                     'border-purple-500': getExamStatus(notification.dateTime, notification.endDateTime) === 'future'
                 }">
                 <div class="p-4 flex items-start justify-between">
@@ -18,7 +18,7 @@
                         <div class="flex-shrink-0">
                             <svg class="w-6 h-6" [ngClass]="{
                         'text-red-500 dark:text-red-400': getExamStatus(notification.dateTime, notification.endDateTime) === 'past',
-                        'text-green-500 dark:text-green-400': getExamStatus(notification.dateTime, notification.endDateTime) === 'present',
+                        'text-teal-500 dark:text-green-400': getExamStatus(notification.dateTime, notification.endDateTime) === 'present',
                         'text-purple-500 dark:text-purple-400': getExamStatus(notification.dateTime, notification.endDateTime) === 'future'
                     }" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -39,7 +39,7 @@
                     <!-- Go to Exam Button -->
                     @if (getExamStatus(notification.dateTime, notification.endDateTime) === 'present') {
                     <a [routerLink]="['/homeStudent/exams']"
-                        class="ml-4 mt-3 px-3 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-sm font-medium flex items-center space-x-1">
+                        class="ml-4 mt-3 px-3 py-1 bg-purple-700 text-white rounded-full hover:bg-purple-800 dark:bg-blue-500 dark:hover:bg-blue-600 text-sm font-medium flex items-center space-x-1">
                         <span>Go to Exam</span>
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
