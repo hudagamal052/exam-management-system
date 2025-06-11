@@ -1,6 +1,9 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { IProfile } from '../../models/iprofile';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UserService } from '../../services/user.service';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -13,78 +16,80 @@ export class ProfileComponent implements AfterViewInit {
   @ViewChild('crudModal', { static: false }) crudModal!: ElementRef;
 
   userProfileData: IProfile = {
-    id: 1,
-    name: 'John Elesha',
-    email: 'john@example.com',
-    phone: '015484521485',
+    id: localStorage.getItem('user_id') || "1",
+    name: '',
+    email: '',
+    phone: '',
     address: {
-      street: 'welcome',
-      city: 'Cairo',
-      country: 'Egypt'
+      street: '',
+      city: '',
+      country: ''
     },
     image: undefined
   };
 
   profileForm: FormGroup;
   selectedFileName: string | null = null;
-  private selectedImage: string | null = null;
+  selectedImage: File | null = null;
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.profileForm = new FormGroup({
-      name: new FormControl(this.userProfileData.name, [
-        Validators.required,
-        Validators.minLength(3)
-      ]),
-      email: new FormControl(this.userProfileData.email, [
-        Validators.required,
-        Validators.email
-      ]),
-      phone: new FormControl(this.userProfileData.phone),
-      street: new FormControl(this.userProfileData.address.street),
-      city: new FormControl(this.userProfileData.address.city),
-      country: new FormControl(this.userProfileData.address.country),
+      name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      email: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.email]),
+      phone: new FormControl(''),
+      street: new FormControl(''),
+      city: new FormControl(''),
+      country: new FormControl(''),
     });
+    this.loadUserProfile();
   }
 
   ngAfterViewInit() {
     if (this.crudModal && this.crudModal.nativeElement) {
       setTimeout(() => {
         const modalElement = this.crudModal.nativeElement;
-        if (typeof (window as any).Modal !== 'undefined') {
-          const modal = new (window as any).Modal(modalElement);
-          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
-          toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-              modal.toggle();
-            });
+        const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
+        toggleButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            modalElement.classList.toggle('hidden');
+            const overlay = document.querySelector('.flowbite-modal-overlay');
+            if (overlay) {
+              overlay.classList.toggle('hidden');
+            }
           });
-        } else {
-          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
-          toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-              modalElement.classList.toggle('hidden');
-              const overlay = document.querySelector('.flowbite-modal-overlay');
-              if (overlay) {
-                overlay.classList.toggle('hidden');
-              }
-            });
-          });
-        }
+        });
       }, 0);
     } else {
       console.warn('Modal element not found. Check template reference #crudModal.');
     }
   }
 
+  loadUserProfile(): void {
+    const id = this.userProfileData.id || "1"; // Fallback to default if not set
+    this.userService.getUserProfile(id).pipe(
+      tap(profile => {
+        this.userProfileData = profile;
+        this.profileForm.patchValue({
+          name: profile.name,
+          email: profile.email,
+          phone: profile.phone,
+          street: profile.address.street,
+          city: profile.address.city,
+          country: profile.address.country
+        });
+      }),
+      catchError(error => {
+        console.error('Failed to load profile:', error);
+        return throwError(() => new Error('Profile load failed'));
+      })
+    ).subscribe();
+  }
+
   onImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.selectedFileName = input.files[0].name;
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.selectedImage = e.target?.result as string;
-      };
-      reader.readAsDataURL(input.files[0]);
+      this.selectedImage = input.files[0];
     } else {
       this.selectedFileName = null;
       this.selectedImage = null;
@@ -95,8 +100,7 @@ export class ProfileComponent implements AfterViewInit {
   onSubmit(): void {
     if (this.profileForm.valid) {
       const formValue = this.profileForm.value;
-      this.userProfileData = {
-        ...this.userProfileData,
+      const profileData: Partial<IProfile> = {
         name: formValue.name,
         email: formValue.email,
         phone: formValue.phone || '',
@@ -104,23 +108,37 @@ export class ProfileComponent implements AfterViewInit {
           street: formValue.street || '',
           city: formValue.city || '',
           country: formValue.country || ''
-        },
-        image: this.selectedImage || this.userProfileData.image
+        }
       };
-      this.profileForm.patchValue({
-        name: this.userProfileData.name,
-        email: this.userProfileData.email,
-        phone: this.userProfileData.phone,
-        street: this.userProfileData.address.street,
-        city: this.userProfileData.address.city,
-        country: this.userProfileData.address.country
-      });
-      this.selectedImage = null;
-      this.selectedFileName = null;
-      const closeButton = document.querySelector('[data-modal-toggle="crud-modal"]') as HTMLElement;
-      if (closeButton) {
-        closeButton.click();
-      }
+
+      this.userService.updateUserProfile(this.userProfileData.id, profileData).pipe(
+        tap(updatedProfile => {
+          this.userProfileData = { ...this.userProfileData, ...updatedProfile };
+          if (this.selectedImage) {
+            this.userService.updateUserImage(this.userProfileData.id, this.selectedImage).pipe(
+              tap(() => {
+                if (this.selectedImage) {
+                  this.userProfileData.image = URL.createObjectURL(this.selectedImage);
+                }
+              }),
+              catchError(error => {
+                console.error('Failed to update image:', error);
+                return throwError(() => new Error('Image update failed'));
+              })
+            ).subscribe();
+          }
+          this.selectedImage = null;
+          this.selectedFileName = null;
+          const closeButton = document.querySelector('[data-modal-toggle="crud-modal"]') as HTMLElement;
+          if (closeButton) {
+            closeButton.click();
+          }
+        }),
+        catchError(error => {
+          console.error('Failed to update profile:', error);
+          return throwError(() => new Error('Profile update failed'));
+        })
+      ).subscribe();
     }
   }
 }

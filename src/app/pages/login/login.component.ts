@@ -22,7 +22,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/admin/dashboard']);
+      const role = this.authService.getCurrentUserRole()?.toLowerCase();
+      if (role === 'student') {
+        this.router.navigate(['/homeStudent']);
+      } else {
+        this.router.navigate(['/admin/dashboard']);
+      }
+    }
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      this.loginForm.patchValue({ email: savedEmail, rememberMe: true });
     }
   }
 
@@ -45,8 +54,23 @@ export class LoginComponent implements OnInit {
         password: this.loginForm.value.password!
       };
       this.authService.login(credentials).subscribe({
-        next: () => {
-          this.router.navigate(["/admin/dashboard"]);
+        next: (response) => {
+          if (response.isFirstTime) {
+            this.router.navigate(['/resetPassword']);
+          } else {
+            const role = response.role.toLowerCase();
+            if (role === 'student') {
+              this.router.navigate(['/homeStudent']);
+            } else {
+              this.router.navigate(['/admin/dashboard']);
+            }
+          }
+          // Handle rememberMe
+          if (this.loginForm.value.rememberMe) {
+            localStorage.setItem('rememberedEmail', this.loginForm.value.email!);
+          } else {
+            localStorage.removeItem('rememberedEmail');
+          }
         },
         error: (err) => {
           // Handle error (show message, etc.)

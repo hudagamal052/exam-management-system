@@ -14,4 +14,13 @@ export class UsersService {
   getAllStudentsState(){
     return this.http.get<UserState[]>(`${this.API_Url}/users`)
   }
+
+
+  deleteUser(getuser: {email:string}){
+    const encodedEmail = encodeURIComponent(getuser.email);
+  
+    return this.http.delete<string>(
+      `${this.API_Url}/users?email=${encodedEmail}`
+    );
+  }
 }

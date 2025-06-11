@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../../../services/users.service';
 import { UserState } from '../../../../models/user-state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-list',
@@ -11,7 +12,7 @@ import { UserState } from '../../../../models/user-state';
 export class UsersListComponent implements OnInit {
   studentState: UserState[] = [];
 
-  constructor(private userService: UsersService){}
+  constructor(private userService: UsersService, private router: Router){}
 
   ngOnInit(): void {
       this.userService.getAllStudentsState().subscribe((value)=>{
@@ -23,7 +24,7 @@ export class UsersListComponent implements OnInit {
 
   goToEditPage(email:string){
     console.log("email" + email);
-    
+    this.router.navigate(['/edit' , ])
   }
   deleteUser(email:string){
     this.userService.getAllStudentsState

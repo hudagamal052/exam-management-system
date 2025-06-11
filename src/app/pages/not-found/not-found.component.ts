@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-not-found',
@@ -10,10 +11,15 @@ import { CommonModule, Location } from '@angular/common';
   styleUrl: './not-found.component.css'
 })
 export class NotFoundComponent {
-  constructor(private router: Router, private location: Location) { }
+  constructor(private authService: AuthenticationService, private router: Router, private location: Location) { }
 
   goToHome() {
-    this.router.navigate(['/homeStudent/main']);
+    const role = this.authService.getCurrentUserRole()?.toLowerCase();
+    if (role === 'student') {
+      this.router.navigate(['/homeStudent']);
+    } else {
+      this.router.navigate(['/admin/dashboard']);
+    }
   }
 
   goBack() {

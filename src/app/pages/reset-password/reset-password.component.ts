@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 export class ResetPasswordComponent {
   isSubmitting = false;
 
-  constructor(private router: Router) { }
+  constructor(private authService: AuthenticationService, private router: Router) { }
 
   resetPasswordForm = new FormGroup({
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -38,14 +39,27 @@ export class ResetPasswordComponent {
   resetPassword() {
     if (this.resetPasswordForm.valid) {
       this.isSubmitting = true;
-      setTimeout(() => {
-        console.log('Password reset data:', {
-          password: this.resetPasswordForm.value.password
-        });
-        alert('Password reset successful! Redirecting to login...');
-        this.router.navigate(['/login']);
-        this.isSubmitting = false;
-      }, 1000);
+      const resetData = {
+        password: this.resetPasswordForm.value.password!,
+        token: localStorage.getItem('auth_token') || ''
+      };
+      this.authService.resetPassword(resetData).subscribe({
+        next: () => {
+          localStorage.setItem('isFirstTime', 'false');
+          const role = this.authService.getCurrentUserRole()?.toLowerCase();
+          if (role === 'student') {
+            this.router.navigate(['/homeStudent']);
+          } else {
+            this.router.navigate(['/admin/dashboard']);
+          }
+          this.isSubmitting = false;
+        },
+        error: (err: Error) => {
+          console.error('Password reset failed', err);
+          alert('Password reset failed. Please try again.');
+          this.isSubmitting = false;
+        }
+      });
     }
   }
 }
