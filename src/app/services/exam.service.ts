@@ -1,86 +1,139 @@
 import { Injectable } from '@angular/core';
-import { Exam, ExamStatus, ExamType } from '../models/exam';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { Exam, ExamStatus, ExamType, calculateExamStatus } from '../models/exam';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExamService {
-  private exams: Exam[] = [
-    { 
-      id: 1, 
-      name: 'Math 101', 
-      type: ExamType.Quiz1,
-      date: '2025-06-01', 
-      status: ExamStatus.Active 
-    },
-    {
-      id: 2,
-      name: 'Science 102',
-      type: ExamType.Midterm,
-      date: '2025-06-05',
-      status: ExamStatus.Scheduled,
-    },
-    {
-      id: 3,
-      name: 'History 201',
-      type: ExamType.Final,
-      date: '2025-05-20',
-      status: ExamStatus.Completed,
-    },
-    {
-      id: 4,
-      name: 'English 103',
-      type: ExamType.Quiz2,
-      date: '2025-06-10',
-      status: ExamStatus.Scheduled,
-    },
-    {
-      id: 5,
-      name: 'Physics 202',
-      type: ExamType.Midterm,
-      date: '2025-06-15',
-      status: ExamStatus.Active,
-    },
-    {
-      id: 6,
-      name: 'Chemistry 104',
-      type: ExamType.Final,
-      date: '2025-05-25',
-      status: ExamStatus.Completed,
-    },
-    {
-      id: 7,
-      name: 'Biology 105',
-      type: ExamType.Quiz1,
-      date: '2025-06-20',
-      status: ExamStatus.Scheduled,
-    },
-    {
-      id: 8,
-      name: 'Math 102',
-      type: ExamType.Final,
-      date: '2025-05-30',
-      status: ExamStatus.Completed,
-    },
-  ];
+  private readonly API_URL = 'http://10.177.240.62:8080/api/teachers/exams';
 
-  getExams(): Exam[] {
-    return this.exams;
+  constructor(private http: HttpClient) {}
+
+  getExams(): Observable<Exam[]> {
+    return this.http.get<Exam[]>(this.API_URL).pipe(
+      map(exams => exams.map(exam => ({
+        ...exam,
+        status: calculateExamStatus(exam)
+      })))
+    );
   }
 
-  addExam(exam: Exam) {
-    exam.id = this.exams.length + 1;
-    this.exams.push(exam);
+  addExam(exam: Exam): Observable<Exam> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Send data in the exact format expected by the API
+    const examData = {
+      title: exam.title,
+      examType: exam.examType,
+      marks: exam.marks,
+      startDate: exam.startDate,
+      endDate: exam.endDate,
+      duration: {
+        seconds: exam.duration.seconds,
+        zero: exam.duration.seconds === 0,
+        nano: 0,
+        negative: false,
+        positive: exam.duration.seconds > 0,
+        units: [
+          {
+            durationEstimated: true,
+            timeBased: true,
+            dateBased: true
+          }
+        ]
+      }
+    };
+
+    // The API returns text response, not JSON, so we need to handle it differently
+    return this.http.post(this.API_URL, examData, { 
+      headers, 
+      responseType: 'text' 
+    }).pipe(
+      map(response => {
+        // Since the API returns text, we'll return the original exam object
+        // The exam was successfully saved, so we can return the exam with calculated status
+        return {
+          ...exam,
+          status: calculateExamStatus(exam)
+        };
+      })
+    );
   }
 
-  updateExam(updatedExam: Exam) {
-    const index = this.exams.findIndex((exam) => exam.id === updatedExam.id);
-    if (index !== -1) {
-      this.exams[index] = updatedExam;
-    }
+  updateExam(updatedExam: Exam): Observable<Exam> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Send data in the exact format expected by the API
+    const examData = {
+      examId: updatedExam.examId,
+      title: updatedExam.title,
+      examType: updatedExam.examType,
+      marks: updatedExam.marks,
+      startDate: updatedExam.startDate,
+      endDate: updatedExam.endDate,
+      duration: {
+        seconds: updatedExam.duration.seconds,
+        zero: updatedExam.duration.seconds === 0,
+        nano: 0,
+        negative: false,
+        positive: updatedExam.duration.seconds > 0,
+        units: [
+          {
+            durationEstimated: true,
+            timeBased: true,
+            dateBased: true
+          }
+        ]
+      }
+    };
+
+    return this.http.put(`${this.API_URL}`, examData, { 
+      headers, 
+      responseType: 'text' 
+    }).pipe(
+      map(response => {
+        // Since the API returns text, we'll return the updated exam object
+        return {
+          ...updatedExam,
+          status: calculateExamStatus(updatedExam)
+        };
+      })
+    );
   }
 
-  deleteExam(id: number) {
-    this.exams = this.exams.filter((exam) => exam.id !== id);
+  deleteExam(examId: string): Observable<void> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    const deleteData = {
+      examId: examId
+    };
+
+    return this.http.delete(`${this.API_URL}/${examId}`, { 
+      headers,
+      body: deleteData,
+      responseType: 'text' 
+    }).pipe(
+      map(() => {
+        // Return void since we don't need the response
+        return;
+      })
+    );
+  }
+
+  getExamById(examId: string): Observable<Exam> {
+    return this.http.get<Exam>(`${this.API_URL}/${examId}`).pipe(
+      map(exam => ({
+        ...exam,
+        status: calculateExamStatus(exam)
+      }))
+    );
   }
 }
