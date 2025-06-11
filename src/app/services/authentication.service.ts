@@ -4,17 +4,17 @@ import { tap, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, RegisterRequest } from '../models/auth-response';
-import { IStudent } from '../models/istudent';
+//import { IStudent } from '../models/istudent';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   private readonly token_key = 'auth_token';
-  // private readonly API_URL = 'http://localhost:8080/api/auth';
-  private readonly API_URL = 'http://10.177.240.26:8080/api/auth';
-  
-  constructor(private http: HttpClient, private router: Router) {}
+  private readonly API_URL = 'http://10.177.240.62:8080/api/auth';
+  //private API_URL2 = 'http://localhost:8080/api/auth';
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   /**
    * Register a new user/student
@@ -39,7 +39,7 @@ export class AuthenticationService {
    * @param credentials - Login credentials
    * @returns Observable with authentication response
    */
-  login(credentials: {email: string, password: string}): Observable<AuthResponse> {
+  login(credentials: { email: string, password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -58,6 +58,20 @@ export class AuthenticationService {
     );
   }
 
+  resetPassword(resetData: { password: string; token: string }): Observable<any> {
+    console.log('Resetting password with data:', resetData); // Debug log
+    return this.http.patch<string>(`${this.API_URL}/reset-password`, resetData, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    }).pipe(
+      tap(response => {
+        console.log('Password reset successful:', response);
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   /**
    * Handle HTTP errors
    * @param error - HTTP error response
@@ -65,7 +79,7 @@ export class AuthenticationService {
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -76,7 +90,7 @@ export class AuthenticationService {
         errorMessage = error.error.message;
       }
     }
-    
+
     console.error('Authentication error:', errorMessage);
     return throwError(() => new Error(errorMessage));
   }

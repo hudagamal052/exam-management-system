@@ -20,27 +20,27 @@ import { authGuard } from './auth.guard';
 import { ResultsComponent } from './pages/admin-dashboard/results/results.component';
 
 export const routes: Routes = [
-      {
+    {
         path: '',
         redirectTo: 'login',
         pathMatch: 'full',
     },
-  {
-    path: 'admin',
-    component: AdminDashboardComponent,
-    canActivate: [authGuard],
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'exams', component: ExamsComponent },
-      { path: 'questions', component: QuestionsComponent },
-      { path: "users", component: UsersComponent},
-      { path: "results", component:ResultsComponent },
-      { path: "users/add", component: AddUserComponent}
-    ],
-  },
+    {
+        path: 'admin',
+        component: AdminDashboardComponent,
+        canActivate: [authGuard],
+        children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'exams', component: ExamsComponent },
+            { path: 'questions', component: QuestionsComponent },
+            { path: "users", component: UsersComponent },
+            { path: "results", component: ResultsComponent },
+            { path: "users/add", component: AddUserComponent }
+        ],
+    },
 
-      {
+    {
         path: 'login',
         component: LoginComponent,
         title: 'Login',
@@ -58,6 +58,7 @@ export const routes: Routes = [
     {
         path: 'homeStudent',
         component: HomeLayoutComponent,
+        //canActivate: [authGuard],
         children: [
             {
                 path: '',
@@ -97,9 +98,9 @@ export const routes: Routes = [
         ],
     },
 
-  {
-    path: "**",
+    {
+        path: "**",
         component: NotFoundComponent,
         title: 'Not Found Page',
-  }
+    }
 ];
