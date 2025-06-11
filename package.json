@@ -11,7 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/common": "^19.2.0",
-    "@angular/comphttps://github.com/hudagamal052/exam-management-system/pull/1/conflict?name=package.json&ancestor_oid=061733490383c99fbfac4d22f8d82c85f33a7126&base_oid=c3c2305f6888f393123a52803a96ac2197044c08&head_oid=ba5c84b6eacce4fa5495beb67743fa0dddb97070iler": "^19.2.0",
+    "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
     "@angular/forms": "^19.2.0",
     "@angular/platform-browser": "^19.2.0",

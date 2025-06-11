@@ -1,5 +1,6 @@
 export interface UserState {
-    name:string;
+    image:string | undefined;
+    username:string;
     email:string;
     phone:string;
     attendedExmas:number;

@@ -12,6 +12,6 @@ export class HeaderComponent {
   navToAddUser(){
     console.log('clicked');
     
-    this.router.navigate(['/users/add'])
+    this.router.navigate(['/admin/users/add'])
   }
 }
