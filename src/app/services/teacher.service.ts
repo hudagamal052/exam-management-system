@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Teacher } from '../models/user';
-import { UpdateTeacherProfile } from '../models/update-teacher-profile';
+import { UpdateTeacherProfile, UpdateTeacherResponse } from '../models/update-teacher-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,6 @@ export class TeacherService {
   }
 
   updateTeacherProfile(updates: UpdateTeacherProfile){
-    return this.http.patch<>
+    return this.http.patch<UpdateTeacherResponse>(`${this.API_URL}/profile`, updates);
   }
 }

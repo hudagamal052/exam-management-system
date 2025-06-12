@@ -1,4 +1,4 @@
-import { Location } from "./user";
+import { Location, Teacher } from "./user";
 
 export interface UpdateTeacherProfile {
     name?:string;
@@ -9,5 +9,6 @@ export interface UpdateTeacherProfile {
 
 
 export interface UpdateTeacherResponse{
-    
+    token:string;
+    user:Teacher;   
 }
