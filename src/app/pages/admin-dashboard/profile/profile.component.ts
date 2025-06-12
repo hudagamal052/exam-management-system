@@ -17,6 +17,8 @@ export class ProfileComponent implements OnInit{
   now = new Date();
   activeExamsCount = 0;
 
+  previewImage: string | ArrayBuffer | null = null;
+
   constructor(private teacherService: TeacherService, private router:Router) {}
 
   ngOnInit(): void {
@@ -27,6 +29,7 @@ export class ProfileComponent implements OnInit{
     this.teacherService.getTeacherProfile().subscribe({
       next: (teacher) => {
         this.teacher = teacher;
+        this.loadTeacherImage();
         this.activeExamsCount = teacher.createdExams?.filter(
           exam => exam.endDate && new Date(exam.endDate) > this.now
         ).length || 0;
@@ -38,8 +41,26 @@ export class ProfileComponent implements OnInit{
       }
     });
   }
+  loadTeacherImage() {
+    console.log(`look for image ${this.teacher.image}`);
+    
+    if (this.teacher.image) {
+      console.log('image exist');
+      
+      this.teacherService.getImage(this.teacher.image).subscribe(url => {
+        console.log(`image url: ${url}`);
+        this.previewImage = url;
+      });
+    }
+  }
+
 
   navToEditProfile(){
     this.router.navigate(['/admin/profile/edit']);
+  }
+
+  isExamActive(endDate: string | Date | undefined): boolean {
+    if (!endDate) return false;
+    return new Date(endDate) > this.now;
   }
 }

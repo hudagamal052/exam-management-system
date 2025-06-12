@@ -1,8 +1,8 @@
 import { Location, Teacher } from "./user";
 
 export interface UpdateTeacherProfile {
-    name?:string;
-    email?:string;
+    name:string;
+    email:string;
     phoneNumber?:string;
     location?:Location
 }

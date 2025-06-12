@@ -41,10 +41,9 @@ export const routes: Routes = [
       { 
         path: "profile",
         component: ProfileComponent,
-        children: [
-          { path: "edit", component: EditProfileComponent },
-        ] 
       },
+      
+      { path: "profile/edit", component: EditProfileComponent },
       { path: "users/add", component: AddUserComponent },
       {path: "user/:email" , component: DetailedResultsComponent}
     ],

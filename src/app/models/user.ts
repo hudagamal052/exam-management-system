@@ -10,15 +10,15 @@ export enum Role {
 }
 
 export interface Exam {
-    examId: string;
+    examId?: string;
     title: string;
     examType: string;
-    startDate: string | Date;
-    endDate: string | Date;
+    startDate: Date;
+    endDate:  Date;
 }
 
 export interface Subject {
-    subjectId: string;
+    subjectId?: string;
     name: string;
     level: number;
     semester: number;
