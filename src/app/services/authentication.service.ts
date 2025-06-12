@@ -10,8 +10,8 @@ import { AuthResponse, RegisterRequest } from '../models/auth-response';
 })
 export class AuthenticationService {
   private readonly token_key = 'auth_token';
-  private readonly API_URL = 'http://localhost:8080/api/auth';
-  // private readonly API_URL = 'http://10.177.240.26:8d080/api/auth';
+  // private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = 'http://10.177.240.62:8080/api/auth';
   
   constructor(private http: HttpClient, private router: Router) {}
 
