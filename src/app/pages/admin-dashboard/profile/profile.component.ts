@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Teacher } from '../../../models/user';
 import { TeacherService } from '../../../services/teacher.service';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ export class ProfileComponent implements OnInit{
   now = new Date();
   activeExamsCount = 0;
 
-  constructor(private teacherService: TeacherService) {}
+  constructor(private teacherService: TeacherService, private router:Router) {}
 
   ngOnInit(): void {
     this.loadTeacherProfile();
@@ -36,5 +37,9 @@ export class ProfileComponent implements OnInit{
         this.loading = false;
       }
     });
+  }
+
+  navToEditProfile(){
+    this.router.navigate(['/admin/profile/edit']);
   }
 }

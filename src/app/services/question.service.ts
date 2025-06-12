@@ -26,7 +26,8 @@ interface QuestionRequest {
   providedIn: 'root',
 })
 export class QuestionService {
-  private readonly API_URL = 'http://10.177.240.78:8080/api/teachers/questions';
+  // private readonly API_URL = 'http://10.177.240.62:8080/api/teachers/questions';
+  private readonly API_URL = 'http://localhost:8080/api/teachers/questions';
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
 

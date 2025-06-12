@@ -32,7 +32,7 @@ export interface Teacher {
     image?: string;
     phone: string;
     isVerified: boolean;
-    location: Location;
+    location?: Location;
     createdExams: Exam[];
     mySubjects: Subject[];
     createdAt: string | Date;

@@ -38,8 +38,13 @@ export const routes: Routes = [
       { path: 'questions', component: QuestionsComponent },
       { path: "users", component: UsersComponent },
       { path: "results", component: ResultsComponent },
-      { path: "profile", component: ProfileComponent },
-      { path: "editprofile", component: EditProfileComponent },
+      { 
+        path: "profile",
+        component: ProfileComponent,
+        children: [
+          { path: "edit", component: EditProfileComponent },
+        ] 
+      },
       { path: "users/add", component: AddUserComponent },
       {path: "user/:email" , component: DetailedResultsComponent}
     ],
