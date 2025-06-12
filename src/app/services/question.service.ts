@@ -133,7 +133,24 @@ export class QuestionService {
   }
 
   updateQuestion(updatedQuestion: Question): Observable<Question> {
-    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, updatedQuestion, { responseType: 'text' }).pipe(
+    // Create question request without questionId
+    const questionRequest: QuestionRequest = {
+      type: updatedQuestion.type,
+      text: updatedQuestion.text,
+      marks: updatedQuestion.marks,
+      isRight: updatedQuestion.isRight,
+      wrongAnswer: updatedQuestion.wrongAnswer,
+      rightAnswer: updatedQuestion.rightAnswer,
+      difficulty: updatedQuestion.difficulty,
+      examId: updatedQuestion.examId
+    };
+
+    const apiRequest: QuestionApiRequest = {
+      questions: [questionRequest],
+      examId: updatedQuestion.examId || ''
+    };
+
+    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, apiRequest, { responseType: 'text' }).pipe(
       map(response => {
         console.log('Update API Response:', response);
         // Return the updated question object since the API doesn't return the updated question
