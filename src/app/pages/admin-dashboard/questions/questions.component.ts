@@ -263,23 +263,26 @@ export class QuestionsComponent implements OnInit {
     });
 
     if (question) {
+      // Clear existing answers first
+      while (this.wrongAnswer.length) {
+        this.wrongAnswer.removeAt(0);
+      }
+      while (this.rightAnswer.length) {
+        this.rightAnswer.removeAt(0);
+      }
+
       this.questionForm.patchValue({
+        questionId: question.questionId,
         text: question.text,
         type: question.type,
         difficulty: question.difficulty || QuestionDifficulty.Medium,
         marks: question.marks,
+        examId: question.examId,
         isRight: question.isRight,
       });
 
       // Set up answers based on question type
       if (question.type === QuestionType.MultipleChoice) {
-        // Clear existing answers first
-        while (this.wrongAnswer.length) {
-          this.wrongAnswer.removeAt(0);
-        }
-        while (this.rightAnswer.length) {
-          this.rightAnswer.removeAt(0);
-        }
         // Add wrong answers
         question.wrongAnswer.forEach((answer) => {
           this.wrongAnswer.push(this.fb.control(answer, Validators.required));
@@ -289,13 +292,6 @@ export class QuestionsComponent implements OnInit {
           this.rightAnswer.push(this.fb.control(answer, Validators.required));
         });
       } else if (question.type === QuestionType.TrueFalse) {
-        // Clear existing answers
-        while (this.wrongAnswer.length) {
-          this.wrongAnswer.removeAt(0);
-        }
-        while (this.rightAnswer.length) {
-          this.rightAnswer.removeAt(0);
-        }
         // Add True/False options
         this.wrongAnswer.push(this.fb.control('False'));
         this.rightAnswer.push(this.fb.control('True'));
@@ -339,6 +335,10 @@ export class QuestionsComponent implements OnInit {
       console.log('Sending question data:', questionData);
 
       if (this.selectedQuestion) {
+        // Ensure we have the original questionId for updates
+        questionData.questionId = this.selectedQuestion.questionId;
+        console.log('Updating question with ID:', questionData.questionId);
+        
         this.questionService.updateQuestion(questionData).subscribe({
           next: () => {
         this.successMessage = 'Question updated successfully!';
@@ -346,8 +346,8 @@ export class QuestionsComponent implements OnInit {
             this.loadQuestions();
           },
           error: (error) => {
-            this.errorMessage = 'Failed to update the question. Please try again.';
             console.error('Error updating question:', error);
+            this.errorMessage = 'Failed to update the question. Please try again.';
           }
         });
       } else {
@@ -358,29 +358,21 @@ export class QuestionsComponent implements OnInit {
             this.loadQuestions();
           },
           error: (error) => {
-            this.errorMessage = 'Failed to add the question. Please try again.';
             console.error('Error adding question:', error);
+            this.errorMessage = 'Failed to add the question. Please try again.';
           }
         });
       }
     } else {
       console.log('Form is invalid:', this.questionForm.errors);
       console.log('Form values:', this.questionForm.value);
+      this.errorMessage = 'Please fill in all required fields correctly.';
     }
   }
 
   editQuestion(question: Question) {
     this.selectedQuestion = question;
-    this.questionForm.patchValue({
-      questionId: question.questionId,
-      text: question.text,
-      type: question.type,
-      difficulty: question.difficulty || QuestionDifficulty.Medium,
-      marks: question.marks,
-      isRight: question.isRight,
-    });
-    this.showModal = true;
-    this.clearMessages();
+    this.openModal(question);
   }
 
   deleteQuestion(questionId: string) {

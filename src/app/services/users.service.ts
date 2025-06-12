@@ -6,7 +6,7 @@ import { UserState } from '../models/user-state';
   providedIn: 'root'
 })
 export class UsersService {
-  private readonly API_Url = "http://localhost:8080/api/teachers"
+  private readonly API_Url = "http://10.177.240.78:8080/api/teachers"
   constructor(private http: HttpClient) {
     
   }
