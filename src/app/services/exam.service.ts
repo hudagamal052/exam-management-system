@@ -7,7 +7,8 @@ import { Exam, ExamStatus, ExamType, calculateExamStatus } from '../models/exam'
   providedIn: 'root',
 })
 export class ExamService {
-  private readonly API_URL = 'http://10.177.240.62:8080/api/teachers/exams';
+  // private readonly API_URL = 'http://10.177.240.62:8080/api/teachers/exams';
+  private readonly API_URL = 'http://localhost:8080/api/teachers/exams';
 
   constructor(private http: HttpClient) {}
 
