@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthResponse, RegisterRequest } from '../models/auth-response';
@@ -49,15 +49,16 @@ export class AuthenticationService {
 
   resetPassword(resetData: { password: string; token: string }): Observable<any> {
     console.log('Resetting password with data:', resetData); // Debug log
-    return this.http.patch<string>(`${this.API_URL}/reset-password`, resetData, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
+    return this.http.patch(`${this.API_URL}/reset-password`, resetData, {
+      responseType: 'text' // Handle non-JSON responses
     }).pipe(
-      tap(response => {
-        console.log('Password reset successful:', response);
-      }),
-      catchError(this.handleError)
+      map(response => {
+        try {
+          return response ? JSON.parse(response) : {};
+        } catch (e) {
+          return response; // Return as text if not JSON
+        }
+      })
     );
   }
 

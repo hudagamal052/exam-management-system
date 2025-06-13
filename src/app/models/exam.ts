@@ -11,34 +11,30 @@ export enum ExamType {
   Final = 'Final'
 }
 
-interface DurationUnit {
-  durationEstimated: boolean;
-  timeBased: boolean;
-  dateBased: boolean;
-}
-
-interface Duration {
-  seconds: number;
-  zero: boolean;
-  nano: number;
-  negative: boolean;
-  positive: boolean;
-  units: DurationUnit[];
-}
-
 export interface Exam {
   title: string;
   examType: ExamType;
   marks: number;
   startDate: string;
   endDate: string;
-  duration: Duration;
+  duration: string;
   examId: string;
-  status?: ExamStatus; // Optional since we'll calculate it based on dates
+  status?: ExamStatus;
+}
+
+
+export interface CreateExamRequest {
+  title: string;
+  examType: ExamType;
+  marks: number;
+  startDate: string;
+  endDate: string;
+  duration: string;
+  examId: string;
 }
 
 // Helper function to calculate exam status based on dates
-export function calculateExamStatus(exam: Exam): ExamStatus {
+export function calculateExamStatus(exam: CreateExamRequest): ExamStatus {
   const now = new Date();
   const startDate = new Date(exam.startDate);
   const endDate = new Date(exam.endDate);
@@ -52,7 +48,7 @@ export function calculateExamStatus(exam: Exam): ExamStatus {
   }
 }
 
-// Helper function to get duration in minutes
-export function getDurationInMinutes(duration: Duration): number {
-  return Math.floor(duration.seconds / 60);
-}
+// // Helper function to get duration in minutes
+// export function getDurationInMinutes(duration: string): number {
+//   return Math.floor(duration.seconds / 60);
+// }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Exam, ExamStatus, ExamType, calculateExamStatus } from '../models/exam';
+import { CreateExamRequest, Exam, ExamStatus, ExamType, calculateExamStatus } from '../models/exam';
 
 @Injectable({
   providedIn: 'root',
@@ -20,35 +20,21 @@ export class ExamService {
     );
   }
 
-  addExam(exam: Exam): Observable<Exam> {
+  addExam(exam: CreateExamRequest): Observable<Exam> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    // Send data in the exact format expected by the API
     const examData = {
       title: exam.title,
       examType: exam.examType,
       marks: exam.marks,
       startDate: exam.startDate,
       endDate: exam.endDate,
-      duration: {
-        seconds: exam.duration.seconds,
-        zero: exam.duration.seconds === 0,
-        nano: 0,
-        negative: false,
-        positive: exam.duration.seconds > 0,
-        units: [
-          {
-            durationEstimated: true,
-            timeBased: true,
-            dateBased: true
-          }
-        ]
-      }
+      duration: exam.duration
     };
 
-    // The API returns text response, not JSON, so we need to handle it differently
+    
     return this.http.post(this.API_URL, examData, { 
       headers, 
       responseType: 'text' 
@@ -64,7 +50,7 @@ export class ExamService {
     );
   }
 
-  updateExam(updatedExam: Exam): Observable<Exam> {
+  updateExam(updatedExam: CreateExamRequest): Observable<Exam> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -77,20 +63,7 @@ export class ExamService {
       marks: updatedExam.marks,
       startDate: updatedExam.startDate,
       endDate: updatedExam.endDate,
-      duration: {
-        seconds: updatedExam.duration.seconds,
-        zero: updatedExam.duration.seconds === 0,
-        nano: 0,
-        negative: false,
-        positive: updatedExam.duration.seconds > 0,
-        units: [
-          {
-            durationEstimated: true,
-            timeBased: true,
-            dateBased: true
-          }
-        ]
-      }
+      duration: updatedExam.duration
     };
 
     return this.http.put(`${this.API_URL}`, examData, { 
@@ -98,11 +71,10 @@ export class ExamService {
       responseType: 'text' 
     }).pipe(
       map(response => {
-        // Since the API returns text, we'll return the updated exam object
         return {
           ...updatedExam,
           status: calculateExamStatus(updatedExam)
-        };
+        }; 
       })
     );
   }

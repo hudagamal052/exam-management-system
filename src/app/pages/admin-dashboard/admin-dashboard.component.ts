@@ -20,13 +20,17 @@ import { AuthenticationService } from '../../services/authentication.service';
   styleUrl: './admin-dashboard.component.css',
 })
 export class AdminDashboardComponent implements OnInit{
+  isLoggingOut = false;
   constructor(private authService :AuthenticationService, private router: Router){}
 
   ngOnInit(): void {
       console.log(this.authService.getCurrentUserEmail());
   }
   logout(){
-    this.authService.logout();
-    // this.router.navigate(['/login']);
+    if (confirm('Are you sure you want to logout?')) {
+      this.isLoggingOut = true;
+      this.authService.logout();
+      this.router.navigate(['/login']);
+    }
   }
 }

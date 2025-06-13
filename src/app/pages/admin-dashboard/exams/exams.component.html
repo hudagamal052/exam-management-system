@@ -1,4 +1,4 @@
-<div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto">
+  <div class="bg-white p-6 rounded-lg shadow-lg overflow-y-auto">
   <!-- Success/Error Messages -->
   <div *ngIf="successMessage" class="mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
     {{ successMessage }}
@@ -74,7 +74,7 @@
           </td>
           <td class="p-3 text-center font-medium">{{ exam.marks }}</td>
           <td class="p-3 text-center">{{ exam.startDate | date:'mediumDate' }}</td>
-          <td class="p-3 text-center">{{ getDurationInMinutes(exam.duration) }}</td>
+          <td class="p-3 text-center">{{ exam.duration }}</td>
           <td class="p-3 text-center">
             <span [ngClass]="{
               'px-2 py-1 rounded-full text-sm': true,
@@ -184,12 +184,16 @@
 
       <!-- Date -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1" for="startDate">Start Date</label>
-        <input id="startDate" formControlName="startDate"
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="startDate">Start Date & Time</label>
+        <input 
+          id="startDate" 
+          formControlName="startDate"
           class="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-          [ngClass]="{'border-red-500': examForm.get('startDate')?.invalid && examForm.get('startDate')?.touched}" type="date">
+          [ngClass]="{'border-red-500': examForm.get('startDate')?.invalid && examForm.get('startDate')?.touched}" 
+          type="datetime-local"
+        >
         <div *ngIf="examForm.get('startDate')?.invalid && examForm.get('startDate')?.touched" class="text-red-500 text-sm mt-1">
-          Start date is required.
+          Start date and time are required.
         </div>
       </div>
 
@@ -198,7 +202,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-1" for="endDate">End Date</label>
         <input id="endDate" formControlName="endDate"
           class="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-          [ngClass]="{'border-red-500': examForm.get('endDate')?.invalid && examForm.get('endDate')?.touched}" type="date">
+          [ngClass]="{'border-red-500': examForm.get('endDate')?.invalid && examForm.get('endDate')?.touched}" type="datetime-local">
         <div *ngIf="examForm.get('endDate')?.invalid && examForm.get('endDate')?.touched" class="text-red-500 text-sm mt-1">
           End date is required.
         </div>
@@ -206,16 +210,22 @@
 
       <!-- Duration -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1" for="durationSeconds">Duration (seconds)</label>
-        <input id="durationSeconds" formControlName="durationSeconds"
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="duration">Duration (ISO 8601)</label>
+        <input 
+          id="duration" 
+          formControlName="duration" 
           class="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-          [ngClass]="{'border-red-500': examForm.get('durationSeconds')?.invalid && examForm.get('durationSeconds')?.touched}"
-          type="number" min="60" placeholder="Enter duration in seconds (minimum 60)">
-        <div *ngIf="examForm.get('durationSeconds')?.invalid && examForm.get('durationSeconds')?.touched" class="text-red-500 text-sm mt-1">
-          Duration is required and must be at least 60 seconds.
+          [ngClass]="{'border-red-500': examForm.get('duration')?.invalid && examForm.get('duration')?.touched}"
+          type="text" 
+          (input)="showDates()"
+          placeholder="PT1H30M (e.g., PT1H, PT2D, PT30M)" 
+          (input)="formatDurationInput($event)"
+        >
+        <div *ngIf="examForm.get('duration')?.invalid && examForm.get('duration')?.touched" class="text-red-500 text-sm mt-1">
+          Valid ISO 8601 duration required (e.g., PT1H, PT30M). Minimum: PT1M.
         </div>
         <div class="text-sm text-gray-500 mt-1">
-          Common durations: 3600 (1 hour), 5400 (1.5 hours), 7200 (2 hours)
+          Examples: PT1H (1 hour), PT1D (1 day), PT1H30M (1.5 hours)
         </div>
       </div>
 

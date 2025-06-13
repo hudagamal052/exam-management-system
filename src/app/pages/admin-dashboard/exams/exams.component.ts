@@ -7,9 +7,10 @@ import {
 } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
-import { Exam, ExamStatus, ExamType, getDurationInMinutes } from '../../../models/exam';
+import { CreateExamRequest, Exam, ExamStatus, ExamType } from '../../../models/exam';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { isoDurationValidator } from '../../../utils/iso-duration.validator';
 
 @Component({
   selector: 'app-exams',
@@ -40,10 +41,10 @@ export class ExamsComponent implements OnInit {
       examId: [null],
       title: ['', [Validators.required, Validators.minLength(3)]],
       examType: [ExamType.Quiz1, Validators.required],
-      marks: [100, [Validators.required, Validators.min(1)]], // Default 100 marks
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      durationSeconds: [null, [Validators.required, Validators.min(60)]], // Duration in seconds
+      marks: [100, [Validators.required, Validators.min(1)]],
+      startDate: [Date(), Validators.required],
+      endDate: [Date(), Validators.required],
+      duration: [null, [Validators.required, isoDurationValidator()]],
     });
   }
 
@@ -59,6 +60,18 @@ export class ExamsComponent implements OnInit {
     }
     
     this.loadExams();
+  }
+
+  formatDurationInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase();
+    
+    if (!value.startsWith('PT')) {
+      value = 'PT' + value.replace(/^PT/i, '');
+    }
+    
+    input.value = value;
+    this.examForm.get('duration')?.setValue(value);
   }
 
   loadExams() {
@@ -111,6 +124,11 @@ export class ExamsComponent implements OnInit {
     this.clearMessages();
   }
 
+  showDates(){
+    console.log(`start date: ${this.examForm.value.startDate}, end date: ${this.examForm.value.endDate}`);
+    
+  }
+
   saveExam() {
     if (this.examForm.valid) {
       this.isSubmitting = true;
@@ -118,8 +136,8 @@ export class ExamsComponent implements OnInit {
       const formValue = this.examForm.value;
       
       // Format dates properly
-      const startDate = new Date(formValue.startDate).toISOString();
-      const endDate = new Date(formValue.endDate).toISOString();
+      const startDate = formValue.startDate;
+      const endDate = formValue.endDate;
       
       // Validate that endDate is after startDate
       if (new Date(endDate) <= new Date(startDate)) {
@@ -127,23 +145,15 @@ export class ExamsComponent implements OnInit {
         this.isSubmitting = false;
         return;
       }
-      
-      // Create exam object with proper structure
-      const exam: Exam = {
+
+      const exam: CreateExamRequest = {
         examId: formValue.examId || '',
         title: formValue.title,
         examType: formValue.examType,
         marks: formValue.marks,
         startDate: startDate,
         endDate: endDate,
-        duration: {
-          seconds: formValue.durationSeconds,
-          zero: formValue.durationSeconds === 0,
-          negative: false,
-          positive: formValue.durationSeconds > 0,
-          nano: 0,
-          units: []
-        }
+        duration: formValue.duration
       };
       
       if (this.selectedExam) {
@@ -213,7 +223,7 @@ export class ExamsComponent implements OnInit {
       marks: exam.marks,
       startDate: exam.startDate,
       endDate: exam.endDate,
-      durationSeconds: exam.duration.seconds
+      durationSeconds: exam.duration
     });
     this.showModal = true;
     this.clearMessages();
