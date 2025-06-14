@@ -83,6 +83,8 @@ export class ExamsComponent implements OnInit {
         this.exams = exams;
         this.isLoading = false;
       },
+
+      
       error: (error) => {
         console.error('Error loading exams:', error);
         this.isLoading = false;
