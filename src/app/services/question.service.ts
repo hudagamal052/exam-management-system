@@ -16,8 +16,8 @@ interface QuestionRequest {
   text: string;
   marks: number;
   isRight: boolean;
-  wrongAnswer: string[];
-  rightAnswer: string[];
+  wrongAnswer: {id: string, answer: string}[];
+  rightAnswer: {id: string, answer: string}[];
   difficulty?: QuestionDifficulty;
   examId?: string;
 }
@@ -26,7 +26,8 @@ interface QuestionRequest {
   providedIn: 'root',
 })
 export class QuestionService {
-  private readonly API_URL = 'http://10.177.240.78:8080/api/teachers/questions';
+  private readonly API_URL = 'http://10.177.240.28:8080/api/teachers/questions';
+ // private readonly API_URL = 'http://localhost:8080/api/teachers/questions';
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
 
@@ -133,28 +134,37 @@ export class QuestionService {
   }
 
   updateQuestion(updatedQuestion: Question): Observable<Question> {
-    // Create question request without questionId
-    const questionRequest: QuestionRequest = {
+    console.log('Service: Updating question with data:', updatedQuestion);
+    
+    // Create question request with proper format
+    const questionRequest: Question = {
+      questionId: updatedQuestion.questionId,
       type: updatedQuestion.type,
       text: updatedQuestion.text,
       marks: updatedQuestion.marks,
       isRight: updatedQuestion.isRight,
-      wrongAnswer: updatedQuestion.wrongAnswer,
-      rightAnswer: updatedQuestion.rightAnswer,
-      difficulty: updatedQuestion.difficulty,
+      wrongAnswer: updatedQuestion.wrongAnswer.map(answer => ({
+        id: answer.id || '',
+        answer: answer.answer
+      })),
+      rightAnswer: updatedQuestion.rightAnswer.map(answer => ({
+        id: answer.id || '',
+        answer: answer.answer
+      })),
+      difficulty: updatedQuestion.difficulty || QuestionDifficulty.Medium,
       examId: updatedQuestion.examId
     };
 
-    const apiRequest: QuestionApiRequest = {
-      questions: [questionRequest],
-      examId: updatedQuestion.examId || ''
-    };
-
-    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, apiRequest, { responseType: 'text' }).pipe(
+    console.log('Service: Sending update request:', questionRequest);
+    
+    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, questionRequest).pipe(
       map(response => {
-        console.log('Update API Response:', response);
-        // Return the updated question object since the API doesn't return the updated question
+        console.log('Service: Update response:', response);
         return updatedQuestion;
+      }),
+      catchError(error => {
+        console.error('Service: Error updating question:', error);
+        throw error;
       })
     );
   }
@@ -224,6 +234,10 @@ export class QuestionService {
 
   // Helper method to get display type from API type
   getDisplayType(apiType: string): string {
+    if (!apiType) {
+      return 'Unknown Type';
+    }
+    
     switch (apiType.toUpperCase()) {
       case 'MULTIPLE_CHOICE':
         return 'Multiple Choice';
@@ -236,7 +250,7 @@ export class QuestionService {
 
   // Helper method to get all options (wrong + right answers)
   getAllOptions(question: Question): string[] {
-    return [...question.wrongAnswer, ...question.rightAnswer];
+    return [...question.wrongAnswer.map(answer => answer.answer), ...question.rightAnswer.map(answer => answer.answer)];
   }
 
   // Helper method to get correct answer display

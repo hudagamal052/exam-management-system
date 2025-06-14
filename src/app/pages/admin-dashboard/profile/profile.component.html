@@ -26,7 +26,7 @@
               <h1 class="text-3xl font-bold text-gray-800">{{ teacher.name }}</h1>
               <p class="text-gray-600 mt-1">{{ teacher.email }}</p>
               <p class="text-gray-600">{{ teacher.phone }}</p>
-              <p class="text-gray-600">{{ teacher.location.city }}, {{ teacher.location.country }}</p>
+              <p class="text-gray-600">{{ teacher.location?.city || "NA"}}, {{ teacher.location?.country }}</p>
               
               <div class="mt-4 flex items-center">
                 <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">
@@ -38,7 +38,7 @@
               </div>
             </div>
             
-            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+            <button (click)="navToEditProfile()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
               Edit Profile
             </button>
           </div>
@@ -47,11 +47,11 @@
           <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
               <h3 class="text-gray-500 text-sm font-medium">Total Subjects</h3>
-              <p class="text-2xl font-bold text-gray-900 mt-1">{{ teacher.mySubjects?.length || 0 }}</p>
+              <p class="text-2xl font-bold text-gray-900 mt-1">{{ teacher.mySubjects.length || 0 }}</p>
             </div>
             <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
               <h3 class="text-gray-500 text-sm font-medium">Exams Created</h3>
-              <p class="text-2xl font-bold text-gray-900 mt-1">{{ teacher.createdExams?.length || 0 }}</p>
+              <p class="text-2xl font-bold text-gray-900 mt-1">{{ teacher.createdExams.length || 0 }}</p>
             </div>
             <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
               <h3 class="text-gray-500 text-sm font-medium">Active Exams</h3>

@@ -204,7 +204,10 @@ export class QuestionsComponent implements OnInit {
         next: (questions) => {
           console.log('Component: Service returned questions:', questions);
           console.log('Component: Questions count:', questions.length);
-          console.log('Component: Questions details:', questions.map(q => ({ id: q.questionId, text: q.text.substring(0, 50) + '...' })));
+          console.log('Component: Questions details:', questions.map(q => ({ 
+            id: q.questionId, 
+            text: q.text ? q.text.substring(0, 50) + '...' : 'No text' 
+          })));
           this.questions = questions;
           console.log('Component: Questions loaded into component:', this.questions.length);
         },
@@ -284,13 +287,24 @@ export class QuestionsComponent implements OnInit {
       // Set up answers based on question type
       if (question.type === QuestionType.MultipleChoice) {
         // Add wrong answers
-        question.wrongAnswer.forEach((answer) => {
-          this.wrongAnswer.push(this.fb.control(answer, Validators.required));
-        });
+        if (question.wrongAnswer && Array.isArray(question.wrongAnswer)) {
+          question.wrongAnswer.forEach((answer) => {
+            this.wrongAnswer.push(this.fb.control(answer, Validators.required));
+          });
+        } else {
+          // Add default wrong answers if none exist
+          this.addWrongAnswer();
+          this.addWrongAnswer();
+        }
         // Add right answers
-        question.rightAnswer.forEach((answer) => {
-          this.rightAnswer.push(this.fb.control(answer, Validators.required));
-        });
+        if (question.rightAnswer && Array.isArray(question.rightAnswer)) {
+          question.rightAnswer.forEach((answer) => {
+            this.rightAnswer.push(this.fb.control(answer, Validators.required));
+          });
+        } else {
+          // Add default right answer if none exists
+          this.addRightAnswer();
+        }
       } else if (question.type === QuestionType.TrueFalse) {
         // Add True/False options
         this.wrongAnswer.push(this.fb.control('False'));
@@ -320,52 +334,98 @@ export class QuestionsComponent implements OnInit {
   saveQuestion() {
     if (this.questionForm.valid) {
       const formValue = this.questionForm.value;
+      console.log('Component: Form values:', formValue);
+      
+      // Ensure arrays are properly initialized and formatted
+      const wrongAnswers = (formValue.wrongAnswer || []).map((answer: string) => ({
+        id: '',
+        answer: answer
+      }));
+      const rightAnswers = (formValue.rightAnswer || []).map((answer: string) => ({
+        id: '',
+        answer: answer
+      }));
+      
       const questionData: Question = {
         questionId: this.selectedQuestion?.questionId || '',
         examId: formValue.examId,
         text: formValue.text,
         type: formValue.type,
-        difficulty: formValue.difficulty,
+        difficulty: formValue.difficulty || QuestionDifficulty.Medium,
         marks: formValue.marks,
         isRight: formValue.isRight,
-        wrongAnswer: formValue.wrongAnswer,
-        rightAnswer: formValue.rightAnswer,
+        wrongAnswer: wrongAnswers,
+        rightAnswer: rightAnswers,
       };
 
-      console.log('Sending question data:', questionData);
+      // Validate required fields
+      if (!questionData.questionId) {
+        this.errorMessage = 'Question ID is required';
+        return;
+      }
+      if (!questionData.text || questionData.text.trim() === '') {
+        this.errorMessage = 'Question text is required';
+        return;
+      }
+      if (!questionData.type) {
+        this.errorMessage = 'Question type is required';
+        return;
+      }
+      if (!questionData.marks) {
+        this.errorMessage = 'Marks are required';
+        return;
+      }
+      if (questionData.wrongAnswer.length === 0) {
+        this.errorMessage = 'At least one wrong answer is required';
+        return;
+      }
+      if (questionData.rightAnswer.length === 0) {
+        this.errorMessage = 'At least one correct answer is required';
+        return;
+      }
+
+      console.log('Component: Prepared question data:', questionData);
 
       if (this.selectedQuestion) {
         // Ensure we have the original questionId for updates
         questionData.questionId = this.selectedQuestion.questionId;
-        console.log('Updating question with ID:', questionData.questionId);
+        console.log('Component: Updating question with ID:', questionData.questionId);
         
         this.questionService.updateQuestion(questionData).subscribe({
-          next: () => {
-        this.successMessage = 'Question updated successfully!';
+          next: (response) => {
+            console.log('Component: Update successful, response:', response);
+            this.successMessage = 'Question updated successfully!';
             this.closeModal();
-            this.loadQuestions();
+            // Force reload questions after successful update
+            setTimeout(() => {
+              this.loadQuestions();
+            }, 100);
           },
           error: (error) => {
-            console.error('Error updating question:', error);
+            console.error('Component: Error updating question:', error);
             this.errorMessage = 'Failed to update the question. Please try again.';
           }
         });
       } else {
+        console.log('Component: Adding new question');
         this.questionService.addQuestion(questionData).subscribe({
-          next: () => {
-        this.successMessage = 'Question added successfully!';
+          next: (response) => {
+            console.log('Component: Add successful, response:', response);
+            this.successMessage = 'Question added successfully!';
             this.closeModal();
-            this.loadQuestions();
+            setTimeout(() => {
+              this.loadQuestions();
+            }, 100);
           },
           error: (error) => {
-            console.error('Error adding question:', error);
+            console.error('Component: Error adding question:', error);
             this.errorMessage = 'Failed to add the question. Please try again.';
           }
         });
       }
     } else {
-      console.log('Form is invalid:', this.questionForm.errors);
-      console.log('Form values:', this.questionForm.value);
+      console.log('Component: Form is invalid:', this.questionForm.errors);
+      console.log('Component: Form values:', this.questionForm.value);
       this.errorMessage = 'Please fill in all required fields correctly.';
     }
   }

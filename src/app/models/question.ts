@@ -15,8 +15,8 @@ export interface Question {
   text: string;
   marks: number;
   isRight: boolean;
-  wrongAnswer: string[];
-  rightAnswer: string[];
+  wrongAnswer: {id: string, answer: string}[];
+  rightAnswer: {id: string, answer: string}[];
   createdAt?: string;
   updatedAt?: string;
   // Additional fields for UI compatibility

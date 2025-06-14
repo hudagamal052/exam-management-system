@@ -7,7 +7,7 @@ import { UpdateTeacherProfile, UpdateTeacherResponse } from '../models/update-te
   providedIn: 'root'
 })
 export class TeacherService {
-  private readonly API_URL= "http://10.177.240.78:8080/api/teachers"
+  private readonly API_URL= "http://10.177.240.28:8080/api/teachers"
 
   constructor(private http:HttpClient) { }
   getTeacherProfile(){
