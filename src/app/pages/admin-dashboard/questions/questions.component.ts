@@ -59,8 +59,8 @@ export class QuestionsComponent implements OnInit {
       difficulty: [QuestionDifficulty.Medium, Validators.required],
       marks: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
       examId: ['', Validators.required],
-      wrongAnswer: this.fb.array([]),
-      rightAnswer: this.fb.array([]),
+      wrongAnswers: this.fb.array([]),
+      rightAnswers: this.fb.array([]),
       isRight: [true],
     });
   }
@@ -69,7 +69,6 @@ export class QuestionsComponent implements OnInit {
     this.loadExams();
     this.setupQuestionTypeListener();
 
-    // Handle examId from query parameters
     this.route.queryParams.subscribe((params) => {
       if (params['examId']) {
         const examId = params['examId'];
@@ -79,71 +78,76 @@ export class QuestionsComponent implements OnInit {
     });
   }
 
-  get wrongAnswer() {
-    return this.questionForm.get('wrongAnswer') as FormArray;
+  get wrongAnswers() {
+    return this.questionForm.get('wrongAnswers') as FormArray;
   }
 
-  get rightAnswer() {
-    return this.questionForm.get('rightAnswer') as FormArray;
+  get rightAnswers() {
+    return this.questionForm.get('rightAnswers') as FormArray;
   }
 
   setupQuestionTypeListener() {
     this.questionForm.get('type')?.valueChanges.subscribe((type) => {
       if (type === QuestionType.TrueFalse) {
-        // Clear existing answers
-        while (this.wrongAnswer.length) {
-          this.wrongAnswer.removeAt(0);
-        }
-        while (this.rightAnswer.length) {
-          this.rightAnswer.removeAt(0);
-        }
-        // Add True/False options
-        this.wrongAnswer.push(this.fb.control('False'));
-        this.rightAnswer.push(this.fb.control('True'));
+        this.clearAnswers();
+        this.addWrongAnswer('False');
+        this.addRightAnswer('True');
       } else if (type === QuestionType.MultipleChoice) {
-        // Clear existing answers
-        while (this.wrongAnswer.length) {
-          this.wrongAnswer.removeAt(0);
-        }
-        while (this.rightAnswer.length) {
-          this.rightAnswer.removeAt(0);
-        }
-        // Add default multiple choice options
-        this.addWrongAnswer();
-        this.addWrongAnswer();
-        this.addRightAnswer();
+        this.clearAnswers();
+        this.addWrongAnswer('');
+        this.addWrongAnswer('');
+        this.addRightAnswer('');
       }
     });
   }
 
-  addWrongAnswer() {
-    if (this.questionForm.get('type')?.value === QuestionType.MultipleChoice) {
-      this.wrongAnswer.push(this.fb.control('', Validators.required));
+  clearAnswers() {
+    while (this.wrongAnswers.length) {
+      this.wrongAnswers.removeAt(0);
+    }
+    while (this.rightAnswers.length) {
+      this.rightAnswers.removeAt(0);
     }
   }
 
-  addRightAnswer() {
+  addWrongAnswer(value: string = '') {
     if (this.questionForm.get('type')?.value === QuestionType.MultipleChoice) {
-      this.rightAnswer.push(this.fb.control('', Validators.required));
+      this.wrongAnswers.push(this.fb.group({
+        id: [this.generateId()],
+        answer: [value, Validators.required]
+      }));
+    }
+  }
+
+  addRightAnswer(value: string = '') {
+    if (this.questionForm.get('type')?.value === QuestionType.MultipleChoice) {
+      this.rightAnswers.push(this.fb.group({
+        id: [this.generateId()],
+        answer: [value, Validators.required]
+      }));
     }
   }
 
   removeWrongAnswer(index: number) {
     if (
       this.questionForm.get('type')?.value === QuestionType.MultipleChoice &&
-      this.wrongAnswer.length > 1
+      this.wrongAnswers.length > 1
     ) {
-      this.wrongAnswer.removeAt(index);
+      this.wrongAnswers.removeAt(index);
     }
   }
 
   removeRightAnswer(index: number) {
     if (
       this.questionForm.get('type')?.value === QuestionType.MultipleChoice &&
-      this.rightAnswer.length > 1
+      this.rightAnswers.length > 1
     ) {
-      this.rightAnswer.removeAt(index);
+      this.rightAnswers.removeAt(index);
     }
+  }
+
+  generateId(): string {
+    return Math.random().toString(36).substring(2, 9);
   }
 
   loadExams() {
@@ -151,7 +155,7 @@ export class QuestionsComponent implements OnInit {
       next: (exams) => {
         this.exams = exams;
         this.examMap = new Map(this.exams.map((exam) => [exam.examId, exam.title]));
-    this.filterExams();
+        this.filterExams();
       },
       error: (error) => {
         console.error('Error loading exams:', error);
@@ -173,7 +177,6 @@ export class QuestionsComponent implements OnInit {
   onExamTypeChange(type: ExamType | null) {
     this.selectedExamType = type;
     this.filterExams();
-    // Reset selected exam if it's not in the filtered list
     if (
       this.selectedExamId &&
       !this.filteredExams.find((exam) => exam.examId === this.selectedExamId)
@@ -194,27 +197,17 @@ export class QuestionsComponent implements OnInit {
   }
 
   loadQuestions() {
-    console.log('Component: Loading questions for exam:', this.selectedExamId);
-    console.log('Component: Selected exam ID type:', typeof this.selectedExamId);
-    console.log('Component: Selected exam ID value:', this.selectedExamId);
-    
     if (this.selectedExamId) {
-      console.log('Component: Calling service to get questions...');
       this.questionService.getQuestionsByExamId(this.selectedExamId).subscribe({
         next: (questions) => {
-          console.log('Component: Service returned questions:', questions);
-          console.log('Component: Questions count:', questions.length);
-          console.log('Component: Questions details:', questions.map(q => ({ id: q.questionId, text: q.text.substring(0, 50) + '...' })));
           this.questions = questions;
-          console.log('Component: Questions loaded into component:', this.questions.length);
         },
         error: (error) => {
-          console.error('Component: Error loading questions:', error);
+          console.error('Error loading questions:', error);
           this.errorMessage = 'Failed to load questions. Please try again.';
         }
       });
     } else {
-      console.log('Component: No exam selected, clearing questions');
       this.questions = [];
     }
   }
@@ -224,12 +217,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   onExamChange(examId: string | null) {
-    console.log('Exam change triggered with examId:', examId);
-    console.log('Exam ID type:', typeof examId);
-    console.log('Available exams:', this.exams.map(e => ({ id: e.examId, title: e.title })));
-    
     this.selectedExamId = examId;
-    // Update URL with selected exam ID
     if (examId) {
       this.router.navigate([], {
         relativeTo: this.route,
@@ -263,14 +251,7 @@ export class QuestionsComponent implements OnInit {
     });
 
     if (question) {
-      // Clear existing answers first
-      while (this.wrongAnswer.length) {
-        this.wrongAnswer.removeAt(0);
-      }
-      while (this.rightAnswer.length) {
-        this.rightAnswer.removeAt(0);
-      }
-
+      this.clearAnswers();
       this.questionForm.patchValue({
         questionId: question.questionId,
         text: question.text,
@@ -281,27 +262,21 @@ export class QuestionsComponent implements OnInit {
         isRight: question.isRight,
       });
 
-      // Set up answers based on question type
       if (question.type === QuestionType.MultipleChoice) {
-        // Add wrong answers
         question.wrongAnswer.forEach((answer) => {
-          this.wrongAnswer.push(this.fb.control(answer, Validators.required));
+          this.addWrongAnswer(answer.answer);
         });
-        // Add right answers
         question.rightAnswer.forEach((answer) => {
-          this.rightAnswer.push(this.fb.control(answer, Validators.required));
+          this.addRightAnswer(answer.answer);
         });
       } else if (question.type === QuestionType.TrueFalse) {
-        // Add True/False options
-        this.wrongAnswer.push(this.fb.control('False'));
-        this.rightAnswer.push(this.fb.control('True'));
+        this.addWrongAnswer('False');
+        this.addRightAnswer('True');
       }
     } else {
-      // For new questions, set default exam if one is selected
       if (this.selectedExamId) {
         this.questionForm.patchValue({ examId: this.selectedExamId });
       }
-      // Initialize with default multiple choice options
       this.addWrongAnswer();
       this.addWrongAnswer();
       this.addRightAnswer();
@@ -325,23 +300,27 @@ export class QuestionsComponent implements OnInit {
         examId: formValue.examId,
         text: formValue.text,
         type: formValue.type,
-        difficulty: formValue.difficulty,
         marks: formValue.marks,
         isRight: formValue.isRight,
-        wrongAnswer: formValue.wrongAnswer,
-        rightAnswer: formValue.rightAnswer,
+        wrongAnswer: formValue.wrongAnswers.map((wa: any) => ({
+          id: wa.id || this.generateId(),
+          answer: wa.answer
+        })),
+        rightAnswer: formValue.rightAnswers.map((ra: any) => ({
+          id: ra.id || this.generateId(),
+          answer: ra.answer
+        })),
+        difficulty: formValue.difficulty
       };
 
-      console.log('Sending question data:', questionData);
+      console.log(`questionData: ${questionData}`);
+      
 
       if (this.selectedQuestion) {
-        // Ensure we have the original questionId for updates
         questionData.questionId = this.selectedQuestion.questionId;
-        console.log('Updating question with ID:', questionData.questionId);
-        
         this.questionService.updateQuestion(questionData).subscribe({
           next: () => {
-        this.successMessage = 'Question updated successfully!';
+            this.successMessage = 'Question updated successfully!';
             this.closeModal();
             this.loadQuestions();
           },
@@ -353,7 +332,7 @@ export class QuestionsComponent implements OnInit {
       } else {
         this.questionService.addQuestion(questionData).subscribe({
           next: () => {
-        this.successMessage = 'Question added successfully!';
+            this.successMessage = 'Question added successfully!';
             this.closeModal();
             this.loadQuestions();
           },
@@ -364,8 +343,6 @@ export class QuestionsComponent implements OnInit {
         });
       }
     } else {
-      console.log('Form is invalid:', this.questionForm.errors);
-      console.log('Form values:', this.questionForm.value);
       this.errorMessage = 'Please fill in all required fields correctly.';
     }
   }
@@ -376,29 +353,17 @@ export class QuestionsComponent implements OnInit {
   }
 
   deleteQuestion(questionId: string) {
-    console.log('Component: Delete question requested with ID:', questionId);
-    console.log('Component: Question ID type:', typeof questionId);
-    console.log('Component: Current questions count:', this.questions.length);
-    console.log('Component: Question to delete:', this.questions.find(q => q.questionId === questionId));
-    
     if (confirm('Are you sure you want to delete this question?')) {
-      console.log('Component: User confirmed deletion, calling service...');
-      
       this.questionService.deleteQuestion(questionId).subscribe({
         next: () => {
-          console.log('Component: Delete successful, reloading questions...');
           this.loadQuestions();
           this.successMessage = 'Question deleted successfully!';
-          console.log('Component: Questions reloaded, new count:', this.questions.length);
         },
         error: (error) => {
-          console.error('Component: Delete failed:', error);
-          this.errorMessage = 'Failed to delete the question. Please try again.';
           console.error('Error deleting question:', error);
+          this.errorMessage = 'Failed to delete the question. Please try again.';
         }
       });
-    } else {
-      console.log('Component: User cancelled deletion');
     }
   }
 

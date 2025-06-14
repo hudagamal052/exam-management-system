@@ -16,8 +16,8 @@ interface QuestionRequest {
   text: string;
   marks: number;
   isRight: boolean;
-  wrongAnswer: string[];
-  rightAnswer: string[];
+  wrongAnswer: {id: string , answer:string}[];
+  rightAnswer: {id: string , answer:string}[];
   difficulty?: QuestionDifficulty;
   examId?: string;
 }
@@ -236,7 +236,7 @@ export class QuestionService {
   }
 
   // Helper method to get all options (wrong + right answers)
-  getAllOptions(question: Question): string[] {
+  getAllOptions(question: Question): {id:string, answer:string}[] {
     return [...question.wrongAnswer, ...question.rightAnswer];
   }
 
