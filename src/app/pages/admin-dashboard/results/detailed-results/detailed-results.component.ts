@@ -28,6 +28,8 @@ export class DetailedResultsComponent implements OnInit{
     )
     .subscribe((value)=>{
       this.student = value;
+      console.log(`value: ${JSON.stringify(value)}`);
+      
     });
   }
 
