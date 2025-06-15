@@ -9,8 +9,8 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class UserService {
   private readonly API_Url = "http://10.177.240.94:8080/api/users/profile"
-  private readonly API_Url_Image = "http://10.177.240.94:8080/api/users/profile/image"
   private readonly Get_API_Url_Image = "http://10.177.240.94:8080/location"
+  private readonly API_Url_Image = "http://10.177.240.78:8080/api/users/set-image"
 
   constructor(private http: HttpClient) { }
 

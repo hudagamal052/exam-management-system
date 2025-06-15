@@ -1,0 +1,173 @@
+<div class="min-h-screen bg-gray-50 p-6">
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="md:flex">
+            <div class="md:w-1/4 p-6 flex flex-col items-center">
+                <div class="relative group">
+                    <div class="relative cursor-pointer">
+                        <img [src]="previewImage || teacher.image || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL_JlCFnIGX5omgjEjgV9F3sBRq14eTERK9w&s'"
+                            alt="Teacher profile"
+                            class="w-32 h-32 rounded-full object-cover border-4 border-indigo-100">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white text-sm font-medium" >Change</span>
+                        </div>
+                    </div>
+                    
+                    <input type="file" id="profileImage" accept="image/*" class="hidden" 
+                           (change)="onFileSelected($event)">
+                    
+                    <span class="absolute bottom-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full"
+                          [ngClass]="{'bg-green-500': teacher.isVerified, 'bg-gray-400': !teacher.isVerified}">
+                        {{ teacher.isVerified ? 'Verified' : 'Pending' }}
+                    </span>
+                </div>
+                @if (selectedFile) {
+                    <button (click)="uploadImage()"
+                            class="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 text-sm rounded-lg">
+                        Upload Image
+                    </button>
+                }
+                <label for="profileImage" class="mt-2 text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer">
+                    Change profile photo
+                </label>
+            </div>
+
+            <div class="md:w-3/4 p-6">
+                <form [formGroup]="ProfileValidator">
+                    <div class="flex justify-between items-start">
+                        <div class="w-full">
+
+
+                            <div class="mb-4">
+                                <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Name</label>
+                                <input type="text" id="name" formControlName="username"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                    [ngClass]="{
+                                        'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('username')?.valid && ProfileValidator.get('username')?.touched,
+                                        'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('username')?.invalid && ProfileValidator.get('username')?.touched
+                                    }">
+                                @if (ProfileValidator.get('username')?.invalid && ProfileValidator.get('username')?.touched) {
+                                    <p class="mt-2 text-sm text-red-600">
+                                        @if (ProfileValidator.get('username')?.errors?.['required']) {
+                                            <span>Name is required</span>
+                                        }
+                                        @if (ProfileValidator.get('username')?.errors?.['minlength']) {
+                                            <span>Name must be at least 4 characters</span>
+                                        }
+                                    </p>
+                                }
+                                @if (ProfileValidator.get('username')?.valid && ProfileValidator.get('username')?.touched) {
+                                    <p class="mt-2 text-sm text-green-600">Name looks good!</p>
+                                }
+                            </div>
+
+
+                            <div class="mb-4">
+                                <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" id="email" formControlName="email"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                    [ngClass]="{
+                                        'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('email')?.valid && ProfileValidator.get('email')?.touched,
+                                        'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('email')?.invalid && ProfileValidator.get('email')?.touched
+                                    }">
+                                @if (ProfileValidator.get('email')?.invalid && ProfileValidator.get('email')?.touched) {
+                                    <p class="mt-2 text-sm text-red-600">
+                                        @if (ProfileValidator.get('email')?.errors?.['required']) {
+                                            <span>Email is required</span>
+                                        }
+                                        @if (ProfileValidator.get('email')?.errors?.['email']) {
+                                            <span>Please enter a valid email</span>
+                                        }
+                                    </p>
+                                }
+                                @if (ProfileValidator.get('email')?.valid && ProfileValidator.get('email')?.touched) {
+                                    <p class="mt-2 text-sm text-green-600">Email looks good!</p>
+                                }
+                            </div>
+
+
+                            <div class="mb-4">
+                                <label for="phone" class="block mb-2 text-sm font-medium text-gray-700">Phone</label>
+                                <input type="tel" id="phone" formControlName="phone"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                    [ngClass]="{
+                                        'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('phone')?.valid && ProfileValidator.get('phone')?.touched,
+                                        'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('phone')?.invalid && ProfileValidator.get('phone')?.touched
+                                    }">
+                                @if (ProfileValidator.get('phone')?.invalid && ProfileValidator.get('phone')?.touched) {
+                                    <p class="mt-2 text-sm text-red-600">
+                                        @if (ProfileValidator.get('phone')?.errors?.['required']) {
+                                            <span>Phone is required</span>
+                                        }
+                                        @if (ProfileValidator.get('phone')?.errors?.['pattern']) {
+                                            <span>Please enter a valid phone number (10-15 digits)</span>
+                                        }
+                                    </p>
+                                }
+                                @if (ProfileValidator.get('phone')?.valid && ProfileValidator.get('phone')?.touched) {
+                                    <p class="mt-2 text-sm text-green-600">Phone looks good!</p>
+                                }
+                            </div>
+
+                            <div class="mb-4 border border-gray-200 rounded-lg p-4">
+                                <h3 class="text-lg font-medium text-gray-700 mb-3">Location</h3>
+                                
+                                <div class="mb-3">
+                                    <label for="city" class="block mb-2 text-sm font-medium text-gray-700">City</label>
+                                    <input type="text" id="city" formControlName="city"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        [ngClass]="{
+                                            'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('location.city')?.valid && ProfileValidator.get('location.city')?.touched,
+                                            'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('location.city')?.invalid && ProfileValidator.get('location.city')?.touched
+                                        }">
+                                    @if (ProfileValidator.get('location.city')?.invalid && ProfileValidator.get('location.city')?.touched) {
+                                        <p class="mt-2 text-sm text-red-600">
+                                            City is required
+                                        </p>
+                                    }
+                                </div>
+                                
+
+
+                                <div class="mb-3">
+                                    <label for="street" class="block mb-2 text-sm font-medium text-gray-700">Street</label>
+                                    <input type="text" id="street" formControlName="street"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        [ngClass]="{
+                                            'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('location.street')?.valid && ProfileValidator.get('location.street')?.touched,
+                                            'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('location.street')?.invalid && ProfileValidator.get('location.street')?.touched
+                                        }">
+                                    @if (ProfileValidator.get('location.street')?.invalid && ProfileValidator.get('location.street')?.touched) {
+                                        <p class="mt-2 text-sm text-red-600">
+                                            Street is required
+                                        </p>
+                                    }
+                                </div>
+                                
+                                <div>
+                                    <label for="country" class="block mb-2 text-sm font-medium text-gray-700">Country</label>
+                                    <input type="text" id="country" formControlName="country"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        [ngClass]="{
+                                            'border-green-500 text-green-900 bg-green-50': ProfileValidator.get('location.country')?.valid && ProfileValidator.get('location.country')?.touched,
+                                            'border-red-500 text-red-900 bg-red-50': ProfileValidator.get('location.country')?.invalid && ProfileValidator.get('location.country')?.touched
+                                        }">
+                                    @if (ProfileValidator.get('location.country')?.invalid && ProfileValidator.get('location.country')?.touched) {
+                                        <p class="mt-2 text-sm text-red-600">
+                                            Country is required
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" (click)="updateTeacher()"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white mx-4 px-8 py-2 rounded-lg"
+                            >
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

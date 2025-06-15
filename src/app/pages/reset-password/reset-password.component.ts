@@ -55,7 +55,8 @@ export class ResetPasswordComponent {
           this.isSubmitting = false;
         },
         error: (err: Error) => {
-          console.error('Password reset failed', err);
+          console.log(`Password reset failed: ${JSON.stringify(err)}`);
+          
           alert('Password reset failed. Please try again.');
           this.isSubmitting = false;
         }

@@ -75,7 +75,8 @@ export class DashboardComponent implements OnInit {
   }
 
   updateChartData() {
-    const exams: Exam[] = this.examService.getExams();
+    this.examService.getExams().subscribe({
+      next: (exams: Exam[]) => {
     const statusCounts = {
       Active: 0,
       Scheduled: 0,
@@ -83,7 +84,7 @@ export class DashboardComponent implements OnInit {
     };
 
     exams.forEach((exam) => {
-      if (exam.status in statusCounts) {
+          if (exam.status && Object.values(ExamStatus).includes(exam.status)) {
         statusCounts[exam.status]++;
       }
     });
@@ -93,5 +94,10 @@ export class DashboardComponent implements OnInit {
       statusCounts.Scheduled,
       statusCounts.Completed,
     ];
+      },
+      error: (error) => {
+        console.error('Error loading exams for dashboard:', error);
+      }
+    });
   }
 }

@@ -136,7 +136,8 @@ export class GradeCircleComponent implements OnInit {
   }
 
   updateChartData() {
-    const exams: Exam[] = this.examService.getExams();
+    this.examService.getExams().subscribe({
+      next: (exams: Exam[]) => {
     this.statusCounts = {
       [ExamStatus.Active]: 0,
       [ExamStatus.Scheduled]: 0,
@@ -144,7 +145,7 @@ export class GradeCircleComponent implements OnInit {
     };
 
     exams.forEach((exam) => {
-      if (exam.status in this.statusCounts) {
+          if (exam.status && Object.values(ExamStatus).includes(exam.status)) {
         this.statusCounts[exam.status]++;
       }
     });
@@ -154,6 +155,11 @@ export class GradeCircleComponent implements OnInit {
       this.statusCounts[ExamStatus.Scheduled],
       this.statusCounts[ExamStatus.Completed],
     ];
+      },
+      error: (error) => {
+        console.error('Error loading exams for chart:', error);
+      }
+    });
   }
 
   getStatusCount(status: ExamStatus): number {
