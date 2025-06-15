@@ -1,39 +1,46 @@
-import { Component, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UserExamsService } from '../../services/user-exams.service';
+import { ExamStatistics } from '../../models/exam-statistics';
 declare var ApexCharts: any;
 
 @Component({
   selector: 'app-home-student',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './home-student.component.html',
   styleUrl: './home-student.component.css'
 })
-export class HomeStudentComponent implements OnInit, OnChanges {
-  numberOfExams: number = 11;
-  numberOfPassedExams: number = 5;
-  numberOfFailedExams: number = 6;
+export class HomeStudentComponent implements OnInit {
+  numberOfExams: number = 0;
+  numberOfPassedExams: number = 0;
+  numberOfFailedExams: number = 0;
   chartLoaded: boolean = false;
   private chart: any = null;
 
   @ViewChild('pieChart', { static: true }) pieChart!: ElementRef;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(
+    private userExamsService: UserExamsService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    setTimeout(() => this.initChart(), 500);
+    this.loadExamStatistics();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ((changes['numberOfPassedExams'] || changes['numberOfFailedExams']) && this.chart) {
-      try {
-        this.chart.updateSeries([this.numberOfPassedExams, this.numberOfFailedExams]);
-        this.chartLoaded = true;
-        this.cdr.detectChanges();
-        console.log('Chart updated with new series:', [this.numberOfPassedExams, this.numberOfFailedExams]);
-      } catch (error) {
-        console.error('Chart update error:', error);
+  private loadExamStatistics(): void {
+    this.userExamsService.getExamStatistics().subscribe({
+      next: (stats: ExamStatistics) => {
+        this.numberOfExams = stats.totalExams;
+        this.numberOfPassedExams = stats.passedExams;
+        this.numberOfFailedExams = stats.failedExams;
+        setTimeout(() => this.initChart(), 500);
+      },
+      error: (error) => {
+        console.error('Error loading exam statistics:', error);
       }
-    }
+    });
   }
 
   private initChart(retryCount: number = 5, retryDelay: number = 200): void {

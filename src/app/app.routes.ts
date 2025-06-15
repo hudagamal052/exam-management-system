@@ -58,7 +58,7 @@ export const routes: Routes = [
     {
         path: 'homeStudent',
         component: HomeLayoutComponent,
-        //canActivate: [authGuard],
+        canActivate: [authGuard],
         children: [
             {
                 path: '',

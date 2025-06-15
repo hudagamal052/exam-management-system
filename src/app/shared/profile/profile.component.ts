@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { IProfile } from '../../models/iprofile';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
@@ -12,20 +12,16 @@ import { throwError } from 'rxjs';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements AfterViewInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('crudModal', { static: false }) crudModal!: ElementRef;
 
   userProfileData: IProfile = {
-    id: localStorage.getItem('user_id') || "1",
+    id: "1",
     name: '',
     email: '',
     phone: '',
-    address: {
-      street: '',
-      city: '',
-      country: ''
-    },
-    image: undefined
+    address: { street: '', city: '', country: '' },
+    image: ''
   };
 
   profileForm: FormGroup;
@@ -35,12 +31,15 @@ export class ProfileComponent implements AfterViewInit {
   constructor(private userService: UserService) {
     this.profileForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      email: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       phone: new FormControl(''),
       street: new FormControl(''),
       city: new FormControl(''),
       country: new FormControl(''),
     });
+  }
+
+  ngOnInit(): void {
     this.loadUserProfile();
   }
 
@@ -48,16 +47,26 @@ export class ProfileComponent implements AfterViewInit {
     if (this.crudModal && this.crudModal.nativeElement) {
       setTimeout(() => {
         const modalElement = this.crudModal.nativeElement;
-        const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
-        toggleButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            modalElement.classList.toggle('hidden');
-            const overlay = document.querySelector('.flowbite-modal-overlay');
-            if (overlay) {
-              overlay.classList.toggle('hidden');
-            }
+        if (typeof (window as any).Modal !== 'undefined') {
+          const modal = new (window as any).Modal(modalElement);
+          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
+          toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              modal.toggle();
+            });
           });
-        });
+        } else {
+          const toggleButtons = document.querySelectorAll('[data-modal-toggle="crud-modal"]');
+          toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              modalElement.classList.toggle('hidden');
+              const overlay = document.querySelector('.flowbite-modal-overlay');
+              if (overlay) {
+                overlay.classList.toggle('hidden');
+              }
+            });
+          });
+        }
       }, 0);
     } else {
       console.warn('Modal element not found. Check template reference #crudModal.');
@@ -65,9 +74,9 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   loadUserProfile(): void {
-    const id = this.userProfileData.id || "1"; // Fallback to default if not set
-    this.userService.getUserProfile(id).pipe(
+    this.userService.getUserProfile().pipe(
       tap(profile => {
+        console.log('Loaded Profile:', profile);
         this.userProfileData = profile;
         this.profileForm.patchValue({
           name: profile.name,
@@ -111,24 +120,50 @@ export class ProfileComponent implements AfterViewInit {
         }
       };
 
-      this.userService.updateUserProfile(this.userProfileData.id, profileData).pipe(
+      this.userService.updateUserProfile(profileData).pipe(
         tap(updatedProfile => {
-          this.userProfileData = { ...this.userProfileData, ...updatedProfile };
+          console.log('Updated Profile:', updatedProfile);
+          this.userProfileData = updatedProfile;
+          this.profileForm.patchValue({
+            name: this.userProfileData.name,
+            email: this.userProfileData.email,
+            phone: this.userProfileData.phone,
+            street: this.userProfileData.address.street,
+            city: this.userProfileData.address.city,
+            country: this.userProfileData.address.country
+          });
+
+          // Handle image update separately with proper error handling
           if (this.selectedImage) {
-            this.userService.updateUserImage(this.userProfileData.id, this.selectedImage).pipe(
-              tap(() => {
-                if (this.selectedImage) {
-                  this.userProfileData.image = URL.createObjectURL(this.selectedImage);
+            // Create object URL before the API call
+            const tempImageUrl = URL.createObjectURL(this.selectedImage);
+
+            this.userService.updateUserImage(this.selectedImage).pipe(
+              tap((response) => {
+                console.log('Image update response:', response);
+                // Use the response image URL if available, otherwise use the temp URL
+                if (response && response.imageUrl) {
+                  this.userProfileData.image = response.imageUrl;
+                } else {
+                  this.userProfileData.image = tempImageUrl;
                 }
               }),
               catchError(error => {
                 console.error('Failed to update image:', error);
+                // Revoke the temporary URL on error
+                URL.revokeObjectURL(tempImageUrl);
                 return throwError(() => new Error('Image update failed'));
               })
-            ).subscribe();
+            ).subscribe({
+              complete: () => {
+                // Clean up
+                this.selectedImage = null;
+                this.selectedFileName = null;
+              }
+            });
           }
-          this.selectedImage = null;
-          this.selectedFileName = null;
+
+          // Close modal
           const closeButton = document.querySelector('[data-modal-toggle="crud-modal"]') as HTMLElement;
           if (closeButton) {
             closeButton.click();
