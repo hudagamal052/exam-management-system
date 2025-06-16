@@ -6,13 +6,12 @@ import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
+  selector: 'app-profile-user',
   imports: [ReactiveFormsModule],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  templateUrl: './profile-user.component.html',
+  styleUrl: './profile-user.component.css'
 })
-export class ProfileComponent implements OnInit, AfterViewInit {
+export class ProfileUserComponent implements OnInit, AfterViewInit {
   @ViewChild('crudModal', { static: false }) crudModal!: ElementRef;
 
   userProfileData: IProfile = {
@@ -27,6 +26,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   profileForm: FormGroup;
   selectedFileName: string | null = null;
   selectedImage: File | null = null;
+  previewImage: string | null = null;
 
   constructor(private userService: UserService) {
     this.profileForm = new FormGroup({
@@ -86,6 +86,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           city: profile.address.city,
           country: profile.address.country
         });
+        // Load image if exists
+        if (profile.image) {
+          this.loadUserImage(profile.image);
+        }
       }),
       catchError(error => {
         console.error('Failed to load profile:', error);
@@ -94,16 +98,35 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     ).subscribe();
   }
 
+  loadUserImage(imageName: string) {
+    console.log(`Loading image: ${imageName}`);
+    this.userService.getImage(imageName).subscribe({
+      next: (url) => {
+        console.log(`Image loaded: ${url}`);
+        this.previewImage = url;
+      },
+      error: (error) => {
+        console.error('Error loading image:', error);
+      }
+    });
+  }
+
   onImageChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
-      this.selectedFileName = input.files[0].name;
       this.selectedImage = input.files[0];
+      this.selectedFileName = input.files[0].name;
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewImage = e.target.result;
+      };
+      reader.readAsDataURL(this.selectedImage);
     } else {
       this.selectedFileName = null;
       this.selectedImage = null;
     }
-    input.value = '';
   }
 
   onSubmit(): void {

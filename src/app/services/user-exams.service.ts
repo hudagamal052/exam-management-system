@@ -11,7 +11,7 @@ export class UserExamsService {
     private readonly API_URL = 'http://localhost:8080/api/users/exams';
     private readonly ANSWERS_URL = 'http://localhost:8080/api/users/answers';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
     /**
      * Get all exams for the current user including past, current and upcoming exams
@@ -78,7 +78,7 @@ export class UserExamsService {
         return this.getPastExams().pipe(
             map(exams => {
                 const totalExams = exams.length;
-                const passedExams = exams.filter(exam => exam.score >= exam.marks * 0.6).length;
+                const passedExams = exams.filter(exam => exam.score >= exam.marks * 0.5).length;
                 const failedExams = totalExams - passedExams;
                 const passRate = totalExams > 0 ? (passedExams / totalExams) * 100 : 0;
 

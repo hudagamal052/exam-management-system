@@ -12,7 +12,6 @@ export class AuthenticationService {
   private readonly token_key = 'auth_token';
   private readonly API_URL = 'http://localhost:8080/api/auth';
 
-
   constructor(private http: HttpClient, private router: Router) { }
 
   register(userData: RegisterRequest): Observable<any> {
@@ -40,6 +39,7 @@ export class AuthenticationService {
           localStorage.setItem('email', response.email);
           localStorage.setItem('role', response.role);
           localStorage.setItem('isFirstTime', response.isFirstTime.toString());
+          localStorage.setItem('createdAt', response.createdAt);
           console.log('Login successful:', response);
         }
       }),
@@ -95,6 +95,7 @@ export class AuthenticationService {
     localStorage.removeItem('email');
     localStorage.removeItem('role');
     localStorage.removeItem('isFirstTime');
+    localStorage.removeItem('createdAt');
     this.router.navigate(['/login']);
   }
 

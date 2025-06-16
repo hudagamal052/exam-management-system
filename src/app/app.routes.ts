@@ -21,6 +21,7 @@ import { DetailedResultsComponent } from './pages/admin-dashboard/results/detail
 import { ProfileComponent } from './pages/admin-dashboard/profile/profile.component';
 import { EditProfileComponent } from './pages/admin-dashbaord/edit-profile/edit-profile.component';
 import { EditUserComponent } from './pages/admin-dashboard/users/edit-user/edit-user.component';
+import { ProfileUserComponent } from './shared/profile-user/profile-user.component';
 
 export const routes: Routes = [
   {
@@ -51,63 +52,6 @@ export const routes: Routes = [
     ],
   },
 
-    {
-        path: 'login',
-        component: LoginComponent,
-        title: 'Login',
-    },
-    {
-        path: 'register',
-        component: RegisterComponent,
-        title: 'Register',
-    },
-    {
-        path: 'resetPassword',
-        component: ResetPasswordComponent,
-        title: 'Reset Password',
-    },
-    {
-        path: 'homeStudent',
-        component: HomeLayoutComponent,
-        canActivate: [authGuard],
-        children: [
-            {
-                path: '',
-                redirectTo: 'main',
-                pathMatch: 'full',
-            },
-            {
-                path: 'main',
-                component: HomeStudentComponent,
-                title: 'Home',
-            },
-            {
-                path: 'profile',
-                component: ProfileComponent,
-                title: 'Profile',
-            },
-            {
-                path: 'notifications',
-                component: NotificationsComponent,
-                title: 'Notifications',
-            },
-            {
-                path: 'exams',
-                component: ExamsStudentComponent,
-                title: 'Exams',
-            },
-            {
-                path: 'results',
-                component: ResultsStudentComponent,
-                title: 'Results',
-            },
-            {
-                path: 'exam-questions/:id',
-                component: ExamQuestionsComponent,
-                title: 'Exam Questions',
-            },
-        ],
-    },
   {
     path: 'login',
     component: LoginComponent,
@@ -140,7 +84,7 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        component: ProfileComponent,
+        component: ProfileUserComponent,
         title: 'Profile',
       },
       {

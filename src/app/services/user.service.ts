@@ -89,4 +89,17 @@ export class UserService {
       })
     );
   }
+
+  getImage(name: string) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get(`${this.Get_API_Url_Image}/${name}`, {
+      headers,
+      responseType: 'blob'
+    }).pipe(
+      map(blob => URL.createObjectURL(blob))
+    );
+  }
 }

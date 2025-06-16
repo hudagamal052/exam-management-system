@@ -2,7 +2,8 @@ export interface AuthResponse {
     token:string;
     email:string; 
     role:string;
-    isFirstTime:Boolean
+    isFirstTime:Boolean;
+    createdAt:string;
 }
 
 export interface RegisterRequest {
@@ -10,7 +11,7 @@ export interface RegisterRequest {
     email: string;
     password: string;
     phone: string;
-    address: {
+    location: {
         street?: string;
         city: string;
         country?: string;

@@ -21,7 +21,7 @@ export class RegisterComponent {
     email: '',
     password: '',
     phone: '',
-    address: {
+    location: {
       street: '',
       city: '',
       country: ''
@@ -92,7 +92,7 @@ export class RegisterComponent {
         email: formValue.email ?? '',
         password: formValue.password ?? '',
         phone: formValue.phone ?? '',
-        address: {
+        location: {
           street: formValue.address?.street ?? '',
           city: formValue.address?.city ?? '',
           country: formValue.address?.country ?? ''
