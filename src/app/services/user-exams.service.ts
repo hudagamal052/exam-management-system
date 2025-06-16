@@ -11,7 +11,7 @@ export class UserExamsService {
     private readonly API_URL = 'http://10.177.240.94:8080/api/users/exams';
     private readonly ANSWERS_URL = 'http://10.177.240.94:8080/api/users/answers';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {}
 
     /**
      * Get all exams for the current user including past, current and upcoming exams

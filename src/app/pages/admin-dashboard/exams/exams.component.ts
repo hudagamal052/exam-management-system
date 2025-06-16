@@ -252,7 +252,7 @@ export class ExamsComponent implements OnInit {
   }
 
   navigateToQuestions(examId: string) {
-    this.router.navigate(['/questions'], { queryParams: { examId: examId } });
+    this.router.navigate(['/admin/questions'], { queryParams: { examId: examId } });
   }
 
   // Helper method to get duration in minutes for display

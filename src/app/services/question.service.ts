@@ -27,7 +27,7 @@ interface QuestionRequest {
 })
 export class QuestionService {
   // private readonly API_URL = 'http://10.177.240.62:8080/api/teachers/questions';
-  private readonly API_URL = 'http://localhost:8080/api/teachers/questions';
+  private readonly API_URL = 'http://10.177.240.94:8080/api/teachers/questions';
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {}
 
@@ -41,28 +41,14 @@ export class QuestionService {
   }
 
   getQuestionsByExamId(examId: string): Observable<Question[]> {
-    // Validate examId
     if (!examId || examId.trim() === '') {
       console.error('Invalid examId provided:', examId);
       return of([]);
     }
     
-    // Check authentication
-    const isLoggedIn = this.authenticationService.isLoggedIn();
-    const token = this.authenticationService.getToken();
-    console.log('Authentication status:', {
-      isLoggedIn: isLoggedIn,
-      hasToken: !!token,
-      tokenLength: token ? token.length : 0
-    });
-    
     const url = `${this.API_URL}/${examId}`;
     console.log('Fetching questions for exam ID:', examId);
-    console.log('Request URL:', url);
-    console.log('Exam ID type:', typeof examId);
-    console.log('Exam ID value:', examId);
     
-    // Add headers to ensure proper authentication
     const options = {
       headers: {
         'Content-Type': 'application/json',
@@ -70,40 +56,25 @@ export class QuestionService {
       }
     };
     
-    // Use the correct endpoint structure: /api/teachers/questions/{examId}
     return this.http.get<Question[]>(url, options).pipe(
       map(response => {
-        console.log('Successfully fetched questions:', response);
+        console.log('Fetched questions:', response);
         return response;
       }),
       catchError(error => {
         console.error('Error fetching questions by exam ID:', error);
-        console.error('Error details:', {
-          status: error.status,
-          statusText: error.statusText,
-          message: error.message,
-          url: url,
-          examId: examId,
-          examIdType: typeof examId,
-          headers: error.headers,
-          error: error.error,
-          isLoggedIn: isLoggedIn,
-          hasToken: !!token
-        });
-        return of([]); // Return empty array on error
+        return of([]);
       })
     );
   }
-
-  getQuestionById(questionId: string): Observable<Question | undefined> {
-    return this.http.get<Question>(`${this.API_URL}/${questionId}`).pipe(
-      catchError(error => {
-        console.error('Error fetching question by ID:', error);
-        return of(undefined); // Return undefined on error
-      })
-    );
-  }
-
+  // getQuestionById(questionId: string): Observable<Question | undefined> {
+  //   return this.http.get<Question>(`${this.API_URL}/${questionId}`).pipe(
+  //     catchError(error => {
+  //       console.error('Error fetching question by ID:', error);
+  //       return of(undefined); // Return undefined on error
+  //     })
+  //   );
+  // }
   addQuestion(question: Question): Observable<Question> {
     // Create question request without questionId
     const questionRequest: QuestionRequest = {
@@ -134,28 +105,28 @@ export class QuestionService {
   }
 
   updateQuestion(updatedQuestion: Question): Observable<Question> {
-    // Create question request without questionId
-    const questionRequest: QuestionRequest = {
+    // Create question request with questionId
+    const questionRequest = {
+      questionId: updatedQuestion.questionId,
       type: updatedQuestion.type,
       text: updatedQuestion.text,
       marks: updatedQuestion.marks,
-      isRight: updatedQuestion.isRight,
       wrongAnswer: updatedQuestion.wrongAnswer,
       rightAnswer: updatedQuestion.rightAnswer,
       difficulty: updatedQuestion.difficulty,
-      examId: updatedQuestion.examId
+      isRight: updatedQuestion.isRight
     };
 
-    const apiRequest: QuestionApiRequest = {
-      questions: [questionRequest],
-      examId: updatedQuestion.examId || ''
-    };
-
-    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, apiRequest, { responseType: 'text' }).pipe(
+    console.log('Update request data:', questionRequest);
+    
+    return this.http.put(`${this.API_URL}/${updatedQuestion.questionId}`, questionRequest).pipe(
       map(response => {
-        console.log('Update API Response:', response);
-        // Return the updated question object since the API doesn't return the updated question
-        return updatedQuestion;
+        console.log('Update response:', response);
+        // Return the updated question with all fields
+        return {
+          ...updatedQuestion,
+          difficulty: updatedQuestion.difficulty
+        };
       })
     );
   }

@@ -21,5 +21,5 @@ export interface Question {
   updatedAt?: string;
   // Additional fields for UI compatibility
   difficulty?: QuestionDifficulty;
-  examId?: string;
+  examId: string;
 }
