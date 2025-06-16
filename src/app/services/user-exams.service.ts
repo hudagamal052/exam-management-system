@@ -78,7 +78,7 @@ export class UserExamsService {
         return this.getPastExams().pipe(
             map(exams => {
                 const totalExams = exams.length;
-                const passedExams = exams.filter(exam => exam.score >= exam.marks * 0.6).length;
+                const passedExams = exams.filter(exam => exam.score >= exam.marks * 0.5).length;
                 const failedExams = totalExams - passedExams;
                 const passRate = totalExams > 0 ? (passedExams / totalExams) * 100 : 0;
 

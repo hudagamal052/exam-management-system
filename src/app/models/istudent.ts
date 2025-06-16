@@ -4,7 +4,7 @@ export interface IStudent {
     email: string;
     password: string;
     phone: string;
-    address: {
+    location: {
         street?: string;
         city: string;
         country?: string;

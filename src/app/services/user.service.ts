@@ -10,7 +10,7 @@ import { map, catchError } from 'rxjs/operators';
 export class UserService {
   private readonly API_Url = "http://10.177.240.94:8080/api/users/profile"
   private readonly Get_API_Url_Image = "http://10.177.240.94:8080/location"
-  private readonly API_Url_Image = "http://10.177.240.78:8080/api/users/set-image"
+  private readonly API_Url_Image = "http://10.177.240.94:8080/api/users/profile/image"
 
   constructor(private http: HttpClient) { }
 
@@ -87,6 +87,19 @@ export class UserService {
         console.error('Update Image Error:', error);
         throw error;
       })
+    );
+  }
+
+  getImage(name: string) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get(`${this.Get_API_Url_Image}/${name}`, {
+      headers,
+      responseType: 'blob'
+    }).pipe(
+      map(blob => URL.createObjectURL(blob))
     );
   }
 }

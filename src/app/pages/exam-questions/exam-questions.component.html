@@ -17,8 +17,8 @@
                     <p class="text-sm text-red-700">{{ error }}</p>
                 </div>
             </div>
-        </div>
-    }
+            </div>
+            }
 
     @if (!loading && !error && exam) {
         <div class="max-w-3xl mx-auto">
@@ -31,7 +31,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <span class="text-blue-700 font-medium">{{ formatTime(timeRemaining) }}</span>
-                    </div>
+                </div>
                 </div>
             </div>
 
@@ -90,8 +90,8 @@
                                         }
                                     </label>
                                 }
-                            }
-                        </div>
+            }
+        </div>
                     </div>
                 </div>
 
@@ -104,15 +104,15 @@
                             class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                         >
                             Previous
-                        </button>
+            </button>
                         <button
                             (click)="nextQuestion()"
                             [disabled]="currentQuestionIndex === allQuestions.length - 1"
                             class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                         >
-                            Next
-                        </button>
-                    </div>
+                Next
+            </button>
+        </div>
 
                     <button
                         (click)="submitExam()"
@@ -126,5 +126,5 @@
                 </div>
             }
         </div>
-    }
-</div>
+        }
+    </div>
