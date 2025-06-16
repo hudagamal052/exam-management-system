@@ -39,3 +39,17 @@ export interface Teacher {
     updatedAt: string | Date;
 }
 
+
+export interface User {
+    userId: string;
+    name: string;
+    email: string;
+    role: Role;
+    image?: string;
+    phone: string;
+    isVerified: boolean;
+    location:Location;
+    createdAt: string | Date;
+    updatedAt: string | Date;
+}
+

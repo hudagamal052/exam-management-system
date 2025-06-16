@@ -12,59 +12,7 @@ import { UsersService } from '../../../services/users.service';
   styleUrl: './results.component.css'
 })
 export class ResultsComponent implements OnInit {
-  students: UserState[] = [
-    {
-      image: "",
-      username: "moataz",
-      email: "moataz.noaman12@gmail.com",
-      phone: "01098518194",
-      attendedExmas: 15,
-      activeExmas: 3,
-      totalScore: 250,
-      levelAndSemster: "2 2th"
-    },
-    {
-      image: "",
-      username: "moataz",
-      email: "moataz.noaman12@gmail.com",
-      phone: "01098518194",
-      attendedExmas: 15,
-      activeExmas: 3,
-      totalScore: 250,
-      levelAndSemster: "2 2th"
-    },
-
-    {
-      image: "",
-      username: "moataz",
-      email: "moataz.noaman12@gmail.com",
-      phone: "01098518194",
-      attendedExmas: 15,
-      activeExmas: 3,
-      totalScore: 250,
-      levelAndSemster: "2 2th"
-    },
-    {
-      image: "",
-      username: "moataz",
-      email: "moataz.noaman12@gmail.com",
-      phone: "01098518194",
-      attendedExmas: 15,
-      activeExmas: 3,
-      totalScore: 250,
-      levelAndSemster: "2 2th"
-    },
-    {
-      image: "",
-      username: "moataz",
-      email: "moataz.noaman12@gmail.com",
-      phone: "01098518194",
-      attendedExmas: 15,
-      activeExmas: 3,
-      totalScore: 250,
-      levelAndSemster: "2 2th"
-    },
-  ]
+  students: UserState[] = [];
 
   constructor(private router: Router, private usersService: UsersService) { }
 

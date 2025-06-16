@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Teacher } from '../models/user';
+import { Teacher, User } from '../models/user';
 import { UpdateTeacherProfile, UpdateTeacherResponse } from '../models/update-teacher-profile';
 import { map } from 'rxjs/operators';
 import { Adduser } from '../models/adduser';
+import { UserState } from '../models/user-state';
 
 
 @Injectable({
@@ -44,5 +45,11 @@ export class TeacherService {
   {
     return this.http.post<any>(`${this.API_URL}/student/add`, user);
   }
+  getUserById(id:string){
+    return this.http.get<User>(`${this.API_URL}/users/${id}`)
+  }
 
+  updateUser(id:string, updateUser : {name:string, email:string, phone:string, address?: {city?: string, street?:string, country?: string}}) {
+    return this.http.patch<User>(`${this.API_URL}/user/${id}`, updateUser);
+  }
 }

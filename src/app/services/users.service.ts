@@ -6,7 +6,7 @@ import { UserState } from '../models/user-state';
   providedIn: 'root'
 })
 export class UsersService {
-  private readonly API_Url = "http://10.177.240.26:8080/api/teachers"
+  private readonly API_Url = "http://localhost:8080/api/teachers"
   constructor(private http: HttpClient) {
     
   }
@@ -16,11 +16,10 @@ export class UsersService {
   }
 
 
-  deleteUser(getuser: {email:string}){
-    const encodedEmail = encodeURIComponent(getuser.email);
+  deleteUser(id: string){
   
     return this.http.delete<string>(
-      `${this.API_Url}/users?email=${encodedEmail}`
+      `${this.API_Url}/users/${id}`
     );
   }
 }

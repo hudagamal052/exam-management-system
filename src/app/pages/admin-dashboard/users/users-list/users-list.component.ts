@@ -22,12 +22,12 @@ export class UsersListComponent implements OnInit {
       })
   }
 
-  goToEditPage(email:string){
-    console.log("email" + email);
-    this.router.navigate(['/edit' , ])
+  goToEditPage(id:string){
+    console.log("email" + id);
+    this.router.navigate([`/admin/users/edit`, id])
   }
-  deleteUser(email:string){
-    this.userService.getAllStudentsState
+  deleteUser(id:string){
+    this.userService.deleteUser(id);
     
   }
 }
