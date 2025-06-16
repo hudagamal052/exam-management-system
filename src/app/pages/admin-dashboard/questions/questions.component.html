@@ -109,7 +109,7 @@
             <span [ngClass]="{
               'px-2 py-1 rounded-full text-sm': true,
               'bg-green-100 text-green-800': question.difficulty === 'Easy',
-              'bg-yellow-100 text-yellow-800': question.difficulty === 'Medium',
+              'bg-yellow-100 text-yellow-800': question.difficulty === 'Medium' || !question.difficulty,
               'bg-red-100 text-red-800': question.difficulty === 'Hard'
             }">
               {{ question.difficulty || 'Medium' }}
@@ -185,20 +185,6 @@
       <div class="bg-purple-50 p-4 rounded-lg">
         <h3 class="text-lg font-semibold text-gray-700 mb-4">Basic Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Exam Selection -->
-          <div class="col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1" for="examId">Exam</label>
-            <select id="examId" formControlName="examId"
-              class="w-full p-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-              [ngClass]="{'border-red-500': questionForm.get('examId')?.invalid && questionForm.get('examId')?.touched}">
-              <option *ngFor="let exam of exams" [ngValue]="exam.examId">{{ exam.title }}</option>
-            </select>
-            <div *ngIf="questionForm.get('examId')?.invalid && questionForm.get('examId')?.touched"
-              class="text-red-500 text-sm mt-1">
-              Please select an exam.
-            </div>
-          </div>
-
           <!-- Question Type -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1" for="type">Question Type</label>
@@ -313,10 +299,24 @@
 
         <!-- True/False Section -->
         <div class="mb-4" *ngIf="questionForm.get('type')?.value === QuestionType.TrueFalse">
-          <label class="block text-sm font-medium text-gray-700 mb-2">True/False Options</label>
-          <div class="bg-gray-50 p-3 rounded-lg">
-            <p class="text-sm text-gray-600">Wrong Answer: False</p>
-            <p class="text-sm text-gray-600">Correct Answer: True</p>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Select the correct answer:</label>
+          <div class="space-y-4">
+            <!-- True Option -->
+            <div class="flex items-center space-x-4 p-3 border rounded-lg">
+              <input type="radio" 
+                     value="True" 
+                     formControlName="correctAnswer"
+                     class="w-4 h-4 text-purple-600 focus:ring-purple-500">
+              <span class="text-gray-700">True</span>
+            </div>
+            <!-- False Option -->
+            <div class="flex items-center space-x-4 p-3 border rounded-lg">
+              <input type="radio" 
+                     value="False" 
+                     formControlName="correctAnswer"
+                     class="w-4 h-4 text-purple-600 focus:ring-purple-500">
+              <span class="text-gray-700">False</span>
+            </div>
           </div>
         </div>
       </div>

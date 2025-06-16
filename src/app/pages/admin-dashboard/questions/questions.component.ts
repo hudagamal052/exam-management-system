@@ -58,10 +58,11 @@ export class QuestionsComponent implements OnInit {
       type: [QuestionType.MultipleChoice, Validators.required],
       difficulty: [QuestionDifficulty.Medium, Validators.required],
       marks: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
-      examId: ['', Validators.required],
+      examId: [''],
       wrongAnswers: this.fb.array([]),
       rightAnswers: this.fb.array([]),
       isRight: [true],
+      correctAnswer: ['True', Validators.required]
     });
   }
 
@@ -90,8 +91,9 @@ export class QuestionsComponent implements OnInit {
     this.questionForm.get('type')?.valueChanges.subscribe((type) => {
       if (type === QuestionType.TrueFalse) {
         this.clearAnswers();
-        this.addWrongAnswer('False');
-        this.addRightAnswer('True');
+        this.questionForm.patchValue({
+          correctAnswer: 'True'
+        });
       } else if (type === QuestionType.MultipleChoice) {
         this.clearAnswers();
         this.addWrongAnswer('');
@@ -200,7 +202,13 @@ export class QuestionsComponent implements OnInit {
     if (this.selectedExamId) {
       this.questionService.getQuestionsByExamId(this.selectedExamId).subscribe({
         next: (questions) => {
-          this.questions = questions;
+          console.log('Loaded questions:', questions);
+          // Load saved difficulties from localStorage
+          const savedDifficulties = JSON.parse(localStorage.getItem('questionDifficulties') || '{}');
+          this.questions = questions.map(question => ({
+            ...question,
+            difficulty: savedDifficulties[question.questionId] || question.difficulty || QuestionDifficulty.Medium
+          }));
         },
         error: (error) => {
           console.error('Error loading questions:', error);
@@ -248,6 +256,7 @@ export class QuestionsComponent implements OnInit {
       marks: 1,
       examId: this.selectedExamId || '',
       isRight: true,
+      correctAnswer: 'True'
     });
 
     if (question) {
@@ -259,27 +268,38 @@ export class QuestionsComponent implements OnInit {
         difficulty: question.difficulty || QuestionDifficulty.Medium,
         marks: question.marks,
         examId: question.examId,
-        isRight: question.isRight,
+        isRight: question.isRight
       });
 
       if (question.type === QuestionType.MultipleChoice) {
         question.wrongAnswer.forEach((answer) => {
-          this.addWrongAnswer(answer.answer);
+          this.wrongAnswers.push(this.fb.group({
+            id: [answer.id || this.generateId()],
+            answer: [answer.answer, Validators.required]
+          }));
         });
         question.rightAnswer.forEach((answer) => {
-          this.addRightAnswer(answer.answer);
+          this.rightAnswers.push(this.fb.group({
+            id: [answer.id || this.generateId()],
+            answer: [answer.answer, Validators.required]
+          }));
         });
       } else if (question.type === QuestionType.TrueFalse) {
-        this.addWrongAnswer('False');
-        this.addRightAnswer('True');
+        const correctAnswer = question.rightAnswer[0]?.answer || 'True';
+        this.questionForm.patchValue({
+          correctAnswer: correctAnswer
+        });
       }
     } else {
-      if (this.selectedExamId) {
-        this.questionForm.patchValue({ examId: this.selectedExamId });
-      }
+      this.questionForm.patchValue({ 
+        examId: this.selectedExamId,
+        difficulty: QuestionDifficulty.Medium 
+      });
+      if (this.questionForm.get('type')?.value === QuestionType.MultipleChoice) {
       this.addWrongAnswer();
       this.addWrongAnswer();
       this.addRightAnswer();
+      }
     }
 
     this.showModal = true;
@@ -295,50 +315,104 @@ export class QuestionsComponent implements OnInit {
   saveQuestion() {
     if (this.questionForm.valid) {
       const formValue = this.questionForm.value;
-      const questionData: Question = {
-        questionId: this.selectedQuestion?.questionId || '',
-        examId: formValue.examId,
-        text: formValue.text,
-        type: formValue.type,
-        marks: formValue.marks,
-        isRight: formValue.isRight,
-        wrongAnswer: formValue.wrongAnswers.map((wa: any) => ({
-          id: wa.id || this.generateId(),
-          answer: wa.answer
-        })),
-        rightAnswer: formValue.rightAnswers.map((ra: any) => ({
-          id: ra.id || this.generateId(),
-          answer: ra.answer
-        })),
-        difficulty: formValue.difficulty
-      };
+      let questionData: any;
 
-      console.log(`questionData: ${questionData}`);
-      
+      // Validate required fields
+      if (!formValue.text || !formValue.type || !formValue.marks) {
+        this.errorMessage = 'Please fill in all required fields.';
+        return;
+      }
+
+      if (formValue.type === QuestionType.TrueFalse) {
+        const correctAnswer = formValue.correctAnswer;
+        questionData = {
+          questionId: this.selectedQuestion?.questionId || this.generateId(),
+          type: formValue.type,
+          text: formValue.text.trim(),
+          marks: formValue.marks,
+          wrongAnswer: [{
+            id: this.generateId(),
+            answer: correctAnswer === 'True' ? 'False' : 'True'
+          }],
+          rightAnswer: [{
+            id: this.generateId(),
+            answer: correctAnswer
+          }],
+          difficulty: formValue.difficulty,
+          isRight: true
+        };
+      } else {
+        // Validate multiple choice answers
+        if (!formValue.wrongAnswers?.length || !formValue.rightAnswers?.length) {
+          this.errorMessage = 'Please add at least one correct and one wrong answer.';
+          return;
+        }
+
+        questionData = {
+          questionId: this.selectedQuestion?.questionId || this.generateId(),
+          type: formValue.type,
+          text: formValue.text.trim(),
+          marks: formValue.marks,
+          wrongAnswer: formValue.wrongAnswers.map((wa: any) => ({
+            id: wa.id || this.generateId(),
+            answer: wa.answer.trim()
+          })),
+          rightAnswer: formValue.rightAnswers.map((ra: any) => ({
+            id: ra.id || this.generateId(),
+            answer: ra.answer.trim()
+          })),
+          difficulty: formValue.difficulty,
+          isRight: formValue.isRight
+        };
+      }
+
+      console.log('Saving question data:', questionData);
 
       if (this.selectedQuestion) {
-        questionData.questionId = this.selectedQuestion.questionId;
+        // Update existing question
         this.questionService.updateQuestion(questionData).subscribe({
-          next: () => {
+          next: (updatedQuestion) => {
+            console.log('Question updated successfully:', updatedQuestion);
             this.successMessage = 'Question updated successfully!';
+            
+            // Save difficulty to localStorage
+            const savedDifficulties = JSON.parse(localStorage.getItem('questionDifficulties') || '{}');
+            savedDifficulties[questionData.questionId] = questionData.difficulty;
+            localStorage.setItem('questionDifficulties', JSON.stringify(savedDifficulties));
+            
+            // Update the local questions array
+            const index = this.questions.findIndex(q => q.questionId === questionData.questionId);
+            if (index !== -1) {
+              this.questions[index] = {
+                ...this.questions[index],
+                ...updatedQuestion,
+                difficulty: questionData.difficulty
+              };
+            }
+            
             this.closeModal();
-            this.loadQuestions();
           },
           error: (error) => {
             console.error('Error updating question:', error);
-            this.errorMessage = 'Failed to update the question. Please try again.';
+            this.errorMessage = error.error?.message || 'Failed to update the question. Please try again.';
           }
         });
       } else {
+        // Add new question
         this.questionService.addQuestion(questionData).subscribe({
           next: () => {
             this.successMessage = 'Question added successfully!';
+            // Save difficulty to localStorage for new question
+            const savedDifficulties = JSON.parse(localStorage.getItem('questionDifficulties') || '{}');
+            savedDifficulties[questionData.questionId] = questionData.difficulty;
+            localStorage.setItem('questionDifficulties', JSON.stringify(savedDifficulties));
+            
             this.closeModal();
             this.loadQuestions();
           },
           error: (error) => {
             console.error('Error adding question:', error);
-            this.errorMessage = 'Failed to add the question. Please try again.';
+            this.errorMessage = error.error?.message || 'Failed to add the question. Please try again.';
           }
         });
       }
@@ -370,5 +444,10 @@ export class QuestionsComponent implements OnInit {
   clearMessages() {
     this.successMessage = null;
     this.errorMessage = null;
+  }
+
+  // Add method to clear saved difficulties if needed
+  clearSavedDifficulties() {
+    localStorage.removeItem('questionDifficulties');
   }
 }

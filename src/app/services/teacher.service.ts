@@ -10,7 +10,7 @@ import { Adduser } from '../models/adduser';
   providedIn: 'root'
 })
 export class TeacherService {
-  private readonly API_URL= "http://localhost:8080/api/teachers"
+  private readonly API_URL= "http://10.177.240.94:8080/api/teachers"
 
   constructor(private http:HttpClient) { }
   getTeacherProfile(){
