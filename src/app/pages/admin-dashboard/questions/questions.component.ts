@@ -369,18 +369,15 @@ export class QuestionsComponent implements OnInit {
       console.log('Saving question data:', questionData);
 
       if (this.selectedQuestion) {
-        // Update existing question
         this.questionService.updateQuestion(questionData).subscribe({
           next: (updatedQuestion) => {
             console.log('Question updated successfully:', updatedQuestion);
             this.successMessage = 'Question updated successfully!';
             
-            // Save difficulty to localStorage
             const savedDifficulties = JSON.parse(localStorage.getItem('questionDifficulties') || '{}');
             savedDifficulties[questionData.questionId] = questionData.difficulty;
             localStorage.setItem('questionDifficulties', JSON.stringify(savedDifficulties));
             
-            // Update the local questions array
             const index = this.questions.findIndex(q => q.questionId === questionData.questionId);
             if (index !== -1) {
               this.questions[index] = {
@@ -398,11 +395,13 @@ export class QuestionsComponent implements OnInit {
           }
         });
       } else {
-        // Add new question
+        questionData = {
+          ...questionData,
+          examId : this.selectedExamId
+        }
         this.questionService.addQuestion(questionData).subscribe({
           next: () => {
             this.successMessage = 'Question added successfully!';
-            // Save difficulty to localStorage for new question
             const savedDifficulties = JSON.parse(localStorage.getItem('questionDifficulties') || '{}');
             savedDifficulties[questionData.questionId] = questionData.difficulty;
             localStorage.setItem('questionDifficulties', JSON.stringify(savedDifficulties));
